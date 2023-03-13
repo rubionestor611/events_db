@@ -15,7 +15,7 @@ const db = mySql.createConnection({
 // let user w/ id join rso
 router.post('/join', (req,res) => {
     const {id, rso_id} = req.body;
-    let sql = 'INSERT INTO rso_members (RSO_Member_user_id, RSO_Member_RSO_id) VALUES ( ? , ?)';
+    let sql = 'INSERT INTO rso_members (rso_member_user_id, rso_member_rso_id) VALUES ( ? , ?)';
     db.query(sql, [id, rso_id], (err, result) => {
         if (err)
         {
@@ -31,7 +31,7 @@ router.post('/join', (req,res) => {
 router.post('/create', (req,res) => {
     const {name, approved, RSOs_admin_id, RSOs_university_id} = req.body;
 
-    let sql = 'INSERT INTO rsos (name, approved, RSOs_admin_id, RSOs_university_id) VALUES ( ?, ?, ?, ?)';
+    let sql = 'INSERT INTO rsos (rso_name, rso_approved, rso_admin_id, rso_university_id) VALUES ( ?, ?, ?, ?)';
     db.query(sql, [name, approved, RSOs_admin_id, RSOs_university_id], (err, result) => {
         if (err)
         {   

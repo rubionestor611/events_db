@@ -41,7 +41,7 @@ router.post('/newUniversity',  (req, res) =>
 // gets all comments
 router.get('/comments', (req, res) => 
 {
-    let sql = 'SELECT Comments.idComment, Comments_event_id, comments.Comments_user_id, comments.message, users.username FROM comments INNER JOIN users ON comments.Comments_user_id = users.idUser';
+    let sql = 'SELECT Comments.comment_id, comment_event_id, comments.comment_user_id, comments.message, users.username FROM comments INNER JOIN users ON comments.comment_user_id = users.user_id';
     db.query(sql, (err, result) => {
         if (err)
         {
@@ -54,7 +54,7 @@ router.get('/comments', (req, res) =>
 // gets all rsos
 router.post('/rsos', (req, res) => {
     const { id, university_id } = req.body;
-    let sql = 'SELECT idRSO, name, approved FROM rsos WHERE NOT EXISTS (SELECT RSO_Member_RSO_id FROM rso_members WHERE rsos.idRSO = rso_members.RSO_Member_RSO_id AND RSO_Member_user_id = ?) AND RSOs_university_id = ?';
+    let sql = 'SELECT rso_id, rso_name, rso_approved FROM rsos WHERE NOT EXISTS (SELECT rso_member_rso_id FROM rso_members WHERE rsos.rso_id = rso_members.rso_member_rso_id AND rso_member_user_id = ?) AND rso_university_id = ?';
     db.query(sql, [id, university_id], (err, result) => {
         if (err) {
             return res.status(400).send(err);
@@ -67,7 +67,7 @@ router.post('/rsos', (req, res) => {
 router.post('/adminRsos',  (req, res) => 
 {
     const { id } = req.body;
-    let sql = 'SELECT idRSO, name, approved FROM rsos WHERE RSOs_admin_id = ?';
+    let sql = 'SELECT rso_id, rso_name, rso_approved FROM rsos WHERE rso_admin_id = ?';
     db.query(sql, id, (err, result) => {
         if (err)
         {

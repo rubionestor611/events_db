@@ -47,7 +47,6 @@ router.post('/register', (req, res) =>
             });
 
             res.json({
-              token,
               user,
               success: true
           }); 
@@ -87,15 +86,14 @@ router.post('/login', (req, res) =>
             return res.status(400).json({ msg: 'Invalid username/password'});
 
         const user = ({
-            "id": result[0].idUser,
+            "id": result[0].user_id,
             "username": result[0].username,
-            "auth_level": result[0].auth_level,
-            "university_id": result[0].Users_university_id,
-            "university_name": result[0].university_name
+            "auth_level": result[0].user_auth_level,
+            "university_id": result[0].user_university_id,
+            "university_name": result[0].user_university_name
         });
 
         res.json({
-          token,
           user,
           success: true
       });
