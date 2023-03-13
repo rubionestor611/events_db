@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const config = require('../config/default.json');
-const auth =  require('../../middleware/auth');
 
 const mySql = require('mysql');
 
@@ -16,14 +14,14 @@ const db = mySql.createConnection({
 // register account
 router.post('/register', (req, res) => 
 {
-    const {userName, password, auth_level, university_id, university_name} = req.body;
+    const {userName, password, user_auth_level, university_id, university_name} = req.body;
 
     // Check if both a username and password was sent
     if (!userName || !password)
         return res.status(400).json({ msg: 'Please enter username and password'}); 
 
-    let sql = 'INSERT INTO users(username, password, auth_level, Users_university_id, university_name) VALUES (?, ?, ?, ?, ?)';
-    db.query(sql, [userName, password, auth_level, university_id, university_name], (err, result) => {
+    let sql = 'INSERT INTO users(username, password, user_auth_level, user_university_id, user_university_name) VALUES (?, ?, ?, ?, ?)';
+    db.query(sql, [userName, password, user_auth_level, university_id, university_name], (err, result) => {
         if (err)
         {
             if (err.code == "ER_DUP_ENTRY")
@@ -56,10 +54,7 @@ router.post('/register', (req, res) =>
 
 });
 
-
-// @router POST to api/auth/login
-// @desc   Log in to the db
-// @access Public
+//login to account
 router.post('/login', (req, res) => 
 {
     const {userName, password} = req.body;
