@@ -12,6 +12,7 @@ const db = mySql.createConnection({
 });
 
 // register account
+// give auth_level = 1 for user and auth_level = 3 for superadmin
 router.post('/register', (req, res) => 
 {
     const {username, password, auth_level, uni_id, uni_name} = req.body;
@@ -55,6 +56,7 @@ router.post('/register', (req, res) =>
 });
 
 //login to account
+// only needs username and password
 router.post('/login', (req, res) => 
 {
     const {username, password} = req.body;
@@ -123,51 +125,4 @@ router.get('/users/id/:id', (req,res)=>{
   });
 });
 
-// deny event
-//from github event
-router.post('/denyEvent', (req, res) => {
-  const { idEvent } = req.body;
-
-  let sql = 'DELETE FROM events WHERE event_id = ?';
-  db.query(sql, idEvent, (err, result) => {
-      if (err) {
-          return res.status(400).send(err);
-      }
-
-      res.json(result);
-
-  });
-});
-
-// approves of event
-// from github repo
-router.post('/approveEvent', (req, res) => {
-  const { idEvent } = req.body;
-
-  let sql = 'UPDATE events SET approved = 1 WHERE event_id = ?';
-  db.query(sql, idEvent, (err, result) => {
-      if (err) {
-          return res.status(400).send(err);
-      }
-
-      res.json(result);
-
-  });
-});
-
-// loads events needing admin approval
-// from github repo
-router.post('/getUnapprovedEvents', (req, res) => {
-  const { university_id } = req.body;
-
-  let sql = 'SELECT event_id, event_name AS eventName, category, description, time, event_date, location, phone, email, rating, numRatings, scoreRatings, rso_name FROM events INNER JOIN rsos ON events.event_rso_id = rsos.rso_id WHERE events.approved = 0 AND events.event_uni_id = ?';
-  db.query(sql, university_id, (err, result) => {
-      if (err) {
-          return res.status(400).send(err);
-      }
-
-      res.json(result);
-
-  });
-});
 module.exports = router;

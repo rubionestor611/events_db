@@ -11,6 +11,7 @@ const db = mySql.createConnection({
     database : "events"
 });
 
+// only superadmins can do this
 router.post('/create', (req,res)=>{
   const {name,description,super_admin_id} = req.body;
 
@@ -41,6 +42,7 @@ router.post('/create', (req,res)=>{
   })
 });
 
+// get all universites info
 router.get('/', (req,res)=>{
   const sql = "SELECT * FROM universities";
   db.query(sql,(err,result)=>{

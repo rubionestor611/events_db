@@ -67,4 +67,17 @@ router.post('/delete', (req,res) => {
     });
 });
 
+// gets all comments related to an event
+router.get('/:event_id', (req,res)=>{
+  const event_id = req.params.event_id;
+
+  const sql = "SELECT * FROM comments WHERE event_id = ?";
+  db.query(sql, event_id, (err,result) => {
+    if(err) {
+      return res.status(400).send(err);
+    }
+    res.json(result);
+  });
+});
+
 module.exports = router;
