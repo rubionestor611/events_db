@@ -7,13 +7,17 @@ export const Register = (props) => {
   const [university, setUniversity] = useState({});
   const [uniList, setUniList] = useState([]);
 
-  useEffect(()=>{
-    axios.get('http://localhost:8800/universities/').then((res) =>setUniList(res))
+  useEffect(() => {
+    async function getUnis() {
+      const res = await axios.get('http://localhost:8800/universities/');
+      const universityList = await res.data.universities;
+      setUniList(universityList);
+    }
+    getUnis();
   }, []);
 
   const handleSubmit =(e) =>{
     e.preventDefault();
-    console.log()
   }
 
   return (
@@ -28,14 +32,12 @@ export const Register = (props) => {
         <select name="selectedUni">
           <option value="" >Select a University</option>
           {
-            uniList.map((uni) =>{
-              <option onSelect={setUniversity({id: uni.id, name: uni.name})} value={uni.id}>{uni.name}</option>
-            })
+            uniList.map(uni => <option key={uni.id} value={uni.id}>{uni.name}</option>)
           }
         </select>
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
       </form>
-      <button className='link-btn' onClick={()=>props.onFormSwitch("login")}>Already have an account? Register here!</button>
+      <button className='link-btn' onClick={()=>props.onFormSwitch("login")}>Already have an account? Log in here!</button>
     </div>
   )
 }

@@ -1,7 +1,9 @@
 const express = require('express');
 const mysql = require('mysql');
+const cors = require('cors');
 const app = express();
 app.use(express.json());
+app.use(cors())
 const comments = require('./routes/comments');
 const authenticate = require('./routes/authenticate');
 const info = require('./routes/info');

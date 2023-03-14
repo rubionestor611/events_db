@@ -20,9 +20,9 @@ export const RegisterAdmin = (props) => {
         <input onChange={e=>setUsername(e.target.value)} value={username} type="text" placeholder="username" id="username" name="username"/>
         <label htmlFor="password">password</label>
         <input onChange={e=>setPassword(e.target.value)} value={password} type="password" placeholder="*****" id="password" name="password"/>
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
       </form>
-      <button className='link-btn' onClick={()=>props.onFormSwitch("login")}>Already have an account? Register here!</button>
+      <button className='link-btn' onClick={()=>props.onFormSwitch("login")}>Already have an account? Log in here!</button>
     </div>
   )
 }
