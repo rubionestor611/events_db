@@ -6,20 +6,20 @@ export const RegisterAdmin = (props) => {
   const [password, setPassword] = useState('');
   const [adminGuess, setAdminGuess] = useState('');
 
-  const handleSubmit =() =>{
-
+  const handleSubmit =(e) =>{
+    e.preventDefault()
   }
 
   return (
     <div className='auth-form-container'>
       <h2>Super Admin Register</h2>
       <form className="register-admin-form" onSubmit={handleSubmit}>
-        <label for="admin-guess">Admin Key</label>
-        <input value={adminGuess} type="text" placeholder="Admin Key" id="admin-guess" name="admin-guess"/>
-        <label for="username">username</label>
-        <input value={username} type="text" placeholder="username" id="username" name="username"/>
-        <label for="password">password</label>
-        <input value={password} type="password" placeholder="*****" id="password" name="password"/>
+        <label htmlFor="admin-guess">Admin Key</label>
+        <input onChange={e=>setAdminGuess(e.target.value)} value={adminGuess} type="text" placeholder="Admin Key" id="admin-guess" name="admin-guess"/>
+        <label htmlFor="username">username</label>
+        <input onChange={e=>setUsername(e.target.value)} value={username} type="text" placeholder="username" id="username" name="username"/>
+        <label htmlFor="password">password</label>
+        <input onChange={e=>setPassword(e.target.value)} value={password} type="password" placeholder="*****" id="password" name="password"/>
         <button type="submit">Login</button>
       </form>
       <button className='link-btn' onClick={()=>props.onFormSwitch("login")}>Already have an account? Register here!</button>

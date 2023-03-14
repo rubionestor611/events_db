@@ -4,18 +4,19 @@ export const Login = (props) =>{
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit =() =>{
-
+  const handleSubmit =(e) =>{
+    e.preventDefault()
+    console.log(username, password)
   }
 
   return (
     <div className='auth-form-container'>
       <h2>Login</h2>
       <form className="login-form" onSubmit={handleSubmit}>
-        <label for="username">username</label>
-        <input value={username} type="text" placeholder="username" id="username" name="username"/>
-        <label for="password">password</label>
-        <input value={password} type="password" placeholder="*****" id="password" name="password"/>
+        <label htmlFor="username">username</label>
+        <input onChange={e=>setUsername(e.target.value)} value={username} type="text" placeholder="username" id="username" name="username"/>
+        <label htmlFor="password">password</label>
+        <input onChange={e=>setPassword(e.target.value)} value={password} type="password" placeholder="*****" id="password" name="password"/>
         <button type="submit">Login</button>
       </form>
       <div className="register-btn-container">
