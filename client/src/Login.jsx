@@ -1,12 +1,19 @@
 import React, {useState} from 'react';
+import { useNavigate} from 'react-router-dom';
+
 
 export const Login = (props) =>{
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit =(e) =>{
     e.preventDefault()
-    console.log(username, password)
+    // check to make sure info is valid
+
+
+    localStorage.setItem("authenticated",true);
+    navigate('landing');
   }
 
   return (

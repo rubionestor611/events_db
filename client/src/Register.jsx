@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
+import { useNavigate} from 'react-router-dom';
 
 export const Register = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [university, setUniversity] = useState({});
   const [uniList, setUniList] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function getUnis() {
@@ -18,6 +20,8 @@ export const Register = (props) => {
 
   const handleSubmit =(e) =>{
     e.preventDefault();
+
+    navigate('landing')
   }
 
   return (

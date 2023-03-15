@@ -1,13 +1,16 @@
 import React, {useState} from 'react';
+import { useNavigate} from 'react-router-dom';
 
 
 export const RegisterAdmin = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [adminGuess, setAdminGuess] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit =(e) =>{
-    e.preventDefault()
+    e.preventDefault();
+    navigate('landing')
   }
 
   return (
