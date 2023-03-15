@@ -12,10 +12,7 @@ root.render(
   <React.StrictMode>
     <GlobalState>
     <BrowserRouter>
-      <Routes>
-        <Route index element={<App/>} />
-        <Route path="landing" element={<LandingPage />} />
-      </Routes>
+      <App />
     </BrowserRouter>
     </GlobalState>
   </React.StrictMode>
@@ -25,3 +22,9 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+/*
+<Routes>
+        <Route index element={<App/>} />
+        <Route path="landing" element={<LandingPage />} />
+      </Routes>
+*/
