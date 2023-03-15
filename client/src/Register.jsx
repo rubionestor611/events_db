@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import { useNavigate} from 'react-router-dom';
+import { useGlobalState } from "./GlobalState.js";
 
 export const Register = (props) => {
   const [username, setUsername] = useState('');
@@ -8,6 +9,7 @@ export const Register = (props) => {
   const [university, setUniversity] = useState('');
   const [uniList, setUniList] = useState([]);
   const navigate = useNavigate();
+  const [globalState, updateGlobalState] = useGlobalState();
 
   useEffect(() => {
     async function getUnis() {
@@ -30,10 +32,12 @@ export const Register = (props) => {
       // have user info
       if(response.data.success){
         // set user info in globalstate
+        updateGlobalState("user", response.data.user);
+
         navigate('/landing');
       }
     }).catch((error)=>{
-      alert(error.response.data.msg)
+      alert(error)
     });
   }
 

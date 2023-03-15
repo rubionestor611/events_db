@@ -5,16 +5,19 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LandingPage from './LandingPage';
+import {GlobalState} from './GlobalState';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <GlobalState>
     <BrowserRouter>
       <Routes>
         <Route index element={<App/>} />
         <Route path="landing" element={<LandingPage />} />
       </Routes>
     </BrowserRouter>
+    </GlobalState>
   </React.StrictMode>
 );
 

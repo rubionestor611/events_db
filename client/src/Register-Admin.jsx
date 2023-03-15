@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
 import { useNavigate} from 'react-router-dom';
 import axios from 'axios';
+import { useGlobalState } from "./GlobalState.js";
 
 export const RegisterAdmin = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [adminGuess, setAdminGuess] = useState('');
   const navigate = useNavigate();
-
+  const [globalState, updateGlobalState] = useGlobalState();
+  
   const handleSubmit =(e) =>{
     e.preventDefault();
     if(adminGuess != 'adminpass'){
@@ -23,6 +25,8 @@ export const RegisterAdmin = (props) => {
       // have user info
       if(response.data.success){
         // set user info in globalstate
+        updateGlobalState("user", response.data.user);
+
         navigate('/landing');
       }
     }).catch((error)=>{

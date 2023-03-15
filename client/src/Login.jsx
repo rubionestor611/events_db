@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import { useNavigate} from 'react-router-dom';
 import axios from 'axios';
+import { useGlobalState } from "./GlobalState.js";
 
 export const Login = (props) =>{
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [globalState, updateGlobalState] = useGlobalState();
 
   const handleSubmit = async(e) =>{
     e.preventDefault()
@@ -16,6 +18,8 @@ export const Login = (props) =>{
       // have user info
       if(response.data.success){
         // set user info in globalstate
+        updateGlobalState("user", response.data.user);
+
         navigate('/landing');
       }
     }).catch((error)=>{
