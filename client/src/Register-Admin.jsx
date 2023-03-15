@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { useNavigate} from 'react-router-dom';
-
+import axios from 'axios';
 
 export const RegisterAdmin = (props) => {
   const [username, setUsername] = useState('');
@@ -10,7 +10,24 @@ export const RegisterAdmin = (props) => {
 
   const handleSubmit =(e) =>{
     e.preventDefault();
-    navigate('landing')
+    if(adminGuess != 'adminpass'){
+      alert('Invalid guess at admin password...maybe you should stop guessing');
+      return;
+    }
+    axios.post("http://localhost:8800/authenticate/register/superadmin", {
+      username: username,
+      password: password,
+      auth_level: 3,
+      uni_id: null
+    }).then((response) => {
+      // have user info
+      if(response.data.success){
+        // set user info in globalstate
+        navigate('/landing');
+      }
+    }).catch((error)=>{
+      alert(error)
+    });
   }
 
   return (

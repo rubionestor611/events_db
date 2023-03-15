@@ -5,7 +5,7 @@ import { useNavigate} from 'react-router-dom';
 export const Register = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [university, setUniversity] = useState({});
+  const [university, setUniversity] = useState('');
   const [uniList, setUniList] = useState([]);
   const navigate = useNavigate();
 
@@ -19,9 +19,22 @@ export const Register = (props) => {
   }, []);
 
   const handleSubmit =(e) =>{
-    e.preventDefault();
-
-    navigate('landing')
+    e.preventDefault()
+    // check to make sure info is valid
+    axios.post("http://localhost:8800/authenticate/register", {
+      username: username,
+      password: password,
+      auth_level: 1,
+      uni_id: university
+    }).then((response) => {
+      // have user info
+      if(response.data.success){
+        // set user info in globalstate
+        navigate('/landing');
+      }
+    }).catch((error)=>{
+      alert(error.response.data.msg)
+    });
   }
 
   return (
@@ -33,7 +46,9 @@ export const Register = (props) => {
         <label htmlFor="password">password</label>
         <input onChange={e=>setPassword(e.target.value)} value={password} type="password" placeholder="*****" id="password" name="password"/>
         <label htmlFor="university">University</label>
-        <select name="selectedUni">
+        <select onChange={(e)=>{
+          setUniversity(e.target.value);
+          }} name="selectedUni">
           <option value="" >Select a University</option>
           {
             uniList.map(uni => <option key={uni.id} value={uni.id}>{uni.name}</option>)

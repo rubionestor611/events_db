@@ -1,19 +1,26 @@
 import React, {useState} from 'react';
 import { useNavigate} from 'react-router-dom';
-
+import axios from 'axios';
 
 export const Login = (props) =>{
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit =(e) =>{
+  const handleSubmit = async(e) =>{
     e.preventDefault()
     // check to make sure info is valid
-
-
-    localStorage.setItem("authenticated",true);
-    navigate('landing');
+    axios.post("http://localhost:8800/authenticate/login", {
+      username,password
+    }).then((response) => {
+      // have user info
+      if(response.data.success){
+        // set user info in globalstate
+        navigate('/landing');
+      }
+    }).catch((error)=>{
+      alert(error.response.data.msg)
+    });
   }
 
   return (
