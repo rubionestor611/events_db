@@ -280,4 +280,48 @@ router.get('/superadmin/getUnapprovedEvents', (req, res) => {
   });
 });
 
+// loads events needing admin approval
+// only call if superAmin is logged in
+router.get('/superadmin/:id/getUnapprovedEvents', (req, res) => {
+  const id = req.params.id;
+  let sql = 'SELECT id FROM universities WHERE super_admin_id = ?'
+  db.query(sql, id, (err,result) => {
+    const uni_ids = result;
+
+    sql = 'SELECT events.id, events.name AS eventName, category, description, time, date, location_id,location, phone, email, rating, numRatings, scoreRatings, events.uni_id AS uni_id, rsos.name AS name FROM events INNER JOIN rsos ON events.rso_id = rsos.id WHERE events.approved = 0';
+    db.query(sql, (err, result) => {
+        if (err) {
+            return res.status(400).send(err);
+        }
+        const events = [];
+        for(let i = 0; i < Object.keys(result).length; i++){
+          events.push(({
+            "id": result[i].id, 
+            "name": result[i].eventName,
+            "category": result[i].category, 
+            "description":result[i].description,
+            "time": result[i].time, 
+            "date": result[i].date, 
+            "location_id": result[i].location_id,
+            "location": result[i].location,
+            "phone": result[i].phone,
+            "email": result[i].email,
+            "rating": result[i].rating,
+            "numRatings": result[i].numRatings,
+            "scoreRatings": result[i].scoreRatings,
+            "rso_name": result[i].name,
+            "uni_id": result[i].uni_id
+          }));
+        }
+
+        for(const uniID of uni_ids){
+          events = events.filter(event => event.uni_id == uniID);
+        }
+
+        res.json({events, success:true});
+
+    });
+  });
+});
+
 module.exports = router;
