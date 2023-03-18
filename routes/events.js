@@ -288,7 +288,7 @@ router.get('/superadmin/:id/getUnapprovedEvents', (req, res) => {
   db.query(sql, id, (err,result) => {
     const uni_ids = result;
 
-    sql = 'SELECT events.id, events.name AS eventName, category, description, time, date, location_id,location, phone, email, rating, numRatings, scoreRatings, events.uni_id AS uni_id, rsos.name AS name FROM events INNER JOIN rsos ON events.rso_id = rsos.id WHERE events.approved = 0';
+    sql = 'SELECT events.id, events.name AS eventName, category, description, time, date, location_id,location, phone, email, rating, numRatings, scoreRatings, events.uni_id AS uni_id, rsos.name AS name FROM events INNER JOIN rsos ON events.rso_id = rsos.id WHERE events.approved = 0 AND events.status = "public"';
     db.query(sql, (err, result) => {
         if (err) {
             return res.status(400).send(err);
