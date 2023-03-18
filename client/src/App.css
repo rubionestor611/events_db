@@ -122,3 +122,17 @@ body{
 .manage-uni-btns{
   margin: 0 1rem;
 }
+
+.sa-event-btn-container{
+
+}
+
+.sa-event-approve{
+  background-color: green;
+  margin-right: 0.5rem;
+}
+
+.sa-event-decline{
+  background-color: red;
+  margin-left: 0.5rem;
+}

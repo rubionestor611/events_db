@@ -249,16 +249,33 @@ router.post('/superadmin/approveEvent', (req, res) => {
 
 // loads events needing admin approval
 // only call if superAmin is logged in
-router.post('/superadmin/getUnapprovedEvents', (req, res) => {
-  const { uni_id } = req.body;
-
-  let sql = 'SELECT id, name AS eventName, category, description, time, event_date, location_id,location, phone, email, rating, numRatings, scoreRatings, rso_name FROM events INNER JOIN rsos ON events.rso_id = rsos.rso_id WHERE events.approved = 0 AND events.uni_id = ?';
-  db.query(sql, uni_id, (err, result) => {
+router.get('/superadmin/getUnapprovedEvents', (req, res) => {
+  let sql = 'SELECT events.id, events.name AS eventName, category, description, time, date, location_id,location, phone, email, rating, numRatings, scoreRatings, rsos.name FROM events INNER JOIN rsos ON events.rso_id = rsos.id WHERE events.approved = 0';
+  db.query(sql, (err, result) => {
       if (err) {
           return res.status(400).send(err);
       }
+      const events = [];
+      for(let i = 0; i < Object.keys(result).length; i++){
+        events.push(({
+          "id": result[i].id, 
+          "name": result[i].eventName,
+          "category": result[i].category, 
+          "description":result[i].description,
+          "time": result[i].time, 
+          "date": result[i].date, 
+          "location_id": result[i].location_id,
+          "location": result[i].location,
+          "phone": result[i].phone,
+          "email": result[i].email,
+          "rating": result[i].rating,
+          "numRatings": result[i].numRatings,
+          "scoreRatings": result[i].scoreRatings,
+          "rso_name": result[i].name
+        }));
+      }
 
-      res.json(result);
+      res.json({events, success:true});
 
   });
 });
