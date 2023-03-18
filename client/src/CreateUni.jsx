@@ -12,10 +12,12 @@ const CreateUni = () => {
     
     if(!globalState.user || globalState.user.auth_level != 3){
       alert("You don't have permission!");
+      return;
     }
 
     if(uniName == '' || uniDesc == ''){
       alert(' Provide a name and description for the university');
+      return;
     }
 
     axios.post('http://localhost:8800/universities/create',

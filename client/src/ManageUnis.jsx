@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';  
 
-
-
 const ManageUnis = () => {
   const[uniList, setUniList] = useState([]);
 
@@ -16,10 +14,8 @@ const ManageUnis = () => {
   }, []);
 
   function deleteUni(id) {
-    console.log('in delete id is ', id)
     axios.post(`http://localhost:8800/universities/delete/${id}`)
       .then((response)=>{
-        console.log("universities", response.data.universities)
         setUniList(response.data.universities);
       })
       .catch(err => {

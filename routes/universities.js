@@ -96,7 +96,13 @@ router.post('/delete/:id', (req,res) => {
     if(err) {
       return res.send(err)
     }
-
+    // DELETE ALL USERS/events/rsos WHOS UNI IS THE UNI BEING DELETED
+    sql = "DELETE FROM users WHERE uni_id = ?";
+    db.query(sql,id);
+    sql = "DELETE FROM events WHERE uni_id = ?";
+    db.query(sql,id);
+    sql = "DELETE FROM rsos WHERE uni_id = ?";
+    db.query(sql,id);
     sql = "SELECT * FROM universities";
     db.query(sql,(err,result)=>{
       const universities = [];
