@@ -8,7 +8,7 @@ const SuperAdminEvents = () => {
 
   useEffect(() => {
     async function getEvents() {
-      const res = await axios.get('http://localhost:8800/events/superadmin/getUnapprovedEvents');
+      const res = await axios.get(`http://localhost:8800/events/superadmin/${globalState.user.id}/getUnapprovedEvents`);
       console.log(res.data.events)
       //const eventList = await res.data.events;
       //setEventList(universityList);
