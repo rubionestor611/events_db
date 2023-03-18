@@ -1,19 +1,16 @@
-import logo from './logo.svg';
 import './App.css';
-import {Login} from "./Login";
-import {Register} from "./Register";
-import {RegisterAdmin} from "./Register-Admin";
 import React, {useState} from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import AuthentiationPage from './AuthenticationPage';
 import CreateRSO from './CreateRSO';
-import CreateUni from './CreateUni';
 import JoinRSO from './JoinRSO';
-import ViewEvent from './ViewEvent';
 import LandingPage from './LandingPage';
 import CreateEvent from './CreateEvent';
 import SuperAdminEvents from './SuperAdminEvents';
+import CreateUni from './CreateUni';
+import ManageUnis from './ManageUnis';
+import ManageEvents from './ManageEvents';
 
 function App() {
   return (
@@ -21,15 +18,20 @@ function App() {
       <Navbar />
       <div className="App">
         <Routes>
+          {/* Login routes */}
           <Route path="/" element={<AuthentiationPage/>} />
           <Route path="/login" element={<AuthentiationPage/>} />
+          {/* Super Admin Stuff*/}
+          <Route path="/superadmin/createuniversity" element={<CreateUni/>}/>
+          <Route path="/superadmin/manageuniversities" element={<ManageUnis/>}/>
+          <Route path="/superadmin/events" element={<SuperAdminEvents/>} />
+          {/* Admin Stuff */}
+          <Route path="/admin/createevent" element={<CreateEvent/>} />
+          <Route path="/admin/manageevents" element={<ManageEvents/>} />
+          {/* User Stuff */}
           <Route path="/landing" element={<LandingPage/>} />
-          <Route path="/createrso" element={<CreateRSO/>} />
           <Route path="/joinrso" element={<JoinRSO/>} />
-          <Route path="/createuni" element={<CreateUni/>} />
-          <Route path="/viewevent" element={<ViewEvent/>} />
-          <Route path="/createevent" element={<CreateEvent/>} />
-          <Route path="/superadminevents" element={<SuperAdminEvents/>} />
+          <Route path="/createrso" element={<CreateRSO/>} />
         </Routes>
       </div>
     </>

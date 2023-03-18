@@ -48,10 +48,11 @@ export default function Navbar(){
         <Link to = "/landing" className="site-title">Events</Link>
         <ul>
             <CustomLink to="/landing">Home</CustomLink>
-            <CustomLink to="/createrso">create rso</CustomLink>
-            <CustomLink to="/joinrso">join rso</CustomLink>
-            <CustomLink to="/createuni">create uni</CustomLink>
-            <CustomLink to="/superadminevents">event requests</CustomLink>
+            {/*<CustomLink to="/createrso">create rso</CustomLink>
+            <CustomLink to="/joinrso">join rso</CustomLink>*/}
+            <CustomLink to="/superadmin/createuniversity">Create uni</CustomLink>
+            <CustomLink to="/superadmin/manageuniversities">Manage Unis</CustomLink>
+            <CustomLink to="/superadmin/events">Event Requests</CustomLink>
         </ul>
         <Link onClick={()=>updateGlobalState("user", null)} to="/">Sign Out</Link>
       </nav>)

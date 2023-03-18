@@ -7,7 +7,7 @@
   background-color: aquamarine;
 }
 
-.auth-from-container, .login-form, .register-form, .register-admin-form {
+.auth-from-container, .login-form, .register-form, .register-admin-form, .create-uni-form-container, .create-uni {
   display:flex;
   flex-direction: column;
   align-items: center;

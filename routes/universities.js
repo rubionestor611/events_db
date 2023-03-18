@@ -14,8 +14,9 @@ const db = mySql.createConnection({
 // only superadmins can do this
 router.post('/create', (req,res)=>{
   const {name,description,super_admin_id} = req.body;
-
-  const sql = "INSERT INTO universities (name,description,super_admin_id) VALUES (?,?,?)";
+  
+  
+  let sql = "INSERT INTO universities (name,description,super_admin_id) VALUES (?,?,?)";
 
   db.query(sql, [name,description,super_admin_id], (err,result) => {
     if (err) {
@@ -23,7 +24,7 @@ router.post('/create', (req,res)=>{
             return res.status(400).json({ msg: 'university name already exists'}); 
         return res.status(400).send(err);
     }
-
+    
     sql = "SELECT * FROM universities WHERE name = ?";
     db.query(sql, name, (err,result) => {
       if (err) { 
