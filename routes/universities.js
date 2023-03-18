@@ -87,4 +87,32 @@ router.get('/universities/id/:id', (req,res)=>{
   })
 });
 
+// delete a university by id
+router.post('/delete/:id', (req,res) => {
+  const id = req.params.id;
+
+  let sql = 'DELETE FROM universities WHERE id = ?'
+  db.query(sql,id,(err,result) => {
+    if(err) {
+      return res.send(err)
+    }
+
+    sql = "SELECT * FROM universities";
+    db.query(sql,(err,result)=>{
+      const universities = [];
+      for(let i = 0; i < Object.keys(result).length; i++){
+        universities.push(({
+          "id": result[i].id,
+          "name": result[i].name,
+          "description": result[i].description,
+          "super_admin_id": result[i].super_admin_id
+        }));
+      }
+
+      res.json({universities, success:true});
+
+    });
+  });
+});
+
 module.exports = router;

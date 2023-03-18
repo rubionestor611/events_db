@@ -92,3 +92,33 @@ body{
 .nav li:hover{
   background-color: #777;
 }
+
+.manage-unis{
+  flex: 1;
+}
+
+.manage-uni-list{
+  list-style: none;
+}
+
+.manage-uni-card{
+  background-color: white;
+  border-radius: 5rem;
+  padding: 2rem 2rem 2rem 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.manage-uni-edit{
+  background-color: lightgrey;
+  margin-right: 0.5rem; 
+}
+
+.manage-uni-delete{
+  background-color: red;
+  margin-left: 0.5rem;
+}
+
+.manage-uni-btns{
+  margin: 0 1rem;
+}
