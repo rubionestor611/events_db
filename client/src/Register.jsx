@@ -38,6 +38,7 @@ export const Register = (props) => {
       }
     }).catch((error)=>{
       alert(error)
+      console.log(error)
     });
   }
 
@@ -50,7 +51,7 @@ export const Register = (props) => {
         <label htmlFor="password">password</label>
         <input onChange={e=>setPassword(e.target.value)} value={password} type="password" placeholder="*****" id="password" name="password"/>
         <label htmlFor="university">University</label>
-        <select onChange={(e)=>{
+        <select style={{marginBottom: '1rem'}} onChange={(e)=>{
           setUniversity(e.target.value);
           }} name="selectedUni">
           <option value="" >Select a University</option>
