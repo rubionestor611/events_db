@@ -250,7 +250,7 @@ router.post('/superadmin/approveEvent', (req, res) => {
 // loads events needing admin approval
 // only call if superAmin is logged in
 router.get('/superadmin/getUnapprovedEvents', (req, res) => {
-  let sql = 'SELECT events.id, events.name AS eventName, category, description, time, date, location_id,location, phone, email, rating, numRatings, scoreRatings, rsos.name FROM events INNER JOIN rsos ON events.rso_id = rsos.id WHERE events.approved = 0';
+  let sql = 'SELECT events.id, events.name AS eventName, category, description, time, date, location_id,location, phone, email, rating, numRatings, scoreRatings, rsos.name AS name FROM events INNER JOIN rsos ON events.rso_id = rsos.id WHERE events.approved = 0';
   db.query(sql, (err, result) => {
       if (err) {
           return res.status(400).send(err);

@@ -32,6 +32,7 @@ const ManageUnis = () => {
             {<div className='manage-uni-card'>
             <h2>{item.name}</h2>
             <p>{item.description}</p>
+            <p>{item.location}</p>
             <button type="button" value={item.id} className='manage-uni-delete' onClick={(e) => deleteUni(e.target.value)}>Delete</button>
           </div>}
           </li>

@@ -6,6 +6,7 @@ const CreateUni = () => {
 
   const [uniName, setUniName] = useState('');
   const [uniDesc, setUniDesc] = useState('');
+  const [uniLocation, setUniLocation] = useState('');
   const [globalState, updateGlobalState] = useGlobalState();
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +25,8 @@ const CreateUni = () => {
     {
       name: uniName,
       description: uniDesc,
-      super_admin_id: globalState.user.id
+      super_admin_id: globalState.user.id,
+      location: uniLocation
     })
     .then((response)=>{
       alert(`${response.data.university.name} successfully created!`);
@@ -44,6 +46,8 @@ const CreateUni = () => {
         <input onChange={e=>setUniName(e.target.value)} value={uniName} type="text" placeholder="university" id="uniname" name="uniname"/>
         <label htmlFor="unidesc">Description</label>
         <input onChange={e=>setUniDesc(e.target.value)} value={uniDesc} type="text" placeholder="This university ..." id="unidesc" name="unidesc"/>
+        <label htmlFor="unilocation">Description</label>
+        <input onChange={e=>setUniLocation(e.target.value)} value={uniLocation} type="text" placeholder="City, State" id="unilocation" name="unilocation"/>
         <button type="submit">Create University</button>
       </form>
     </div>

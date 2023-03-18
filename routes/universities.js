@@ -13,12 +13,11 @@ const db = mySql.createConnection({
 
 // only superadmins can do this
 router.post('/create', (req,res)=>{
-  const {name,description,super_admin_id} = req.body;
+  const {name,description,super_admin_id, location} = req.body;
   
-  
-  let sql = "INSERT INTO universities (name,description,super_admin_id) VALUES (?,?,?)";
+  let sql = "INSERT INTO universities (name,description,location,super_admin_id) VALUES (?,?,?,?)";
 
-  db.query(sql, [name,description,super_admin_id], (err,result) => {
+  db.query(sql, [name,description,location,super_admin_id], (err,result) => {
     if (err) {
         if (err.code == "ER_DUP_ENTRY")
             return res.status(400).json({ msg: 'university name already exists'}); 
@@ -35,7 +34,8 @@ router.post('/create', (req,res)=>{
         "id": result[0].id,
         "name": result[0].name,
         "description": result[0].description,
-        "super_admin_id": result[0].super_admin_id
+        "super_admin_id": result[0].super_admin_id,
+        "location": result[0].location
       });
 
       res.json({university, success:true});
@@ -53,7 +53,8 @@ router.get('/', (req,res)=>{
         "id": result[i].id,
         "name": result[i].name,
         "description": result[i].description,
-        "super_admin_id": result[i].super_admin_id
+        "super_admin_id": result[i].super_admin_id,
+        "location":result[i].location
       }));
     }
 
@@ -78,7 +79,8 @@ router.get('/universities/id/:id', (req,res)=>{
       "id": result[0].id,
       "name": result[0].name,
       "description": result[0].description,
-      "super_admin_id": result[0].super_admin_id
+      "super_admin_id": result[0].super_admin_id,
+      "location":result[i].location
     });
 
     res.json({
@@ -111,7 +113,8 @@ router.post('/delete/:id', (req,res) => {
           "id": result[i].id,
           "name": result[i].name,
           "description": result[i].description,
-          "super_admin_id": result[i].super_admin_id
+          "super_admin_id": result[i].super_admin_id,
+          "location":result[i].location
         }));
       }
 

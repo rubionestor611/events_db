@@ -4,8 +4,8 @@
 - [x] Login
 - [x] Registration as user or super_admin
 - [ ] Super Admins
-  - [ ] create unis page
-    - [ ] location
+  - [x] create unis page
+    - [x] location
   - [x] edit/delete unis page
   - [ ] approve/deny events page
     - [ ] public events related to owned university
