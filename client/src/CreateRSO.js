@@ -30,15 +30,19 @@ const CreateRSO = () => {
       alert(`${RSOName} has been created!`);
     }).catch(err=>{
       console.log(err);
-      alert(`Failed to create the RSO named ${RSOName}`)
+      if(err.response.status == 401){
+        alert(`You are already a member of ${RSOName}`);
+      }else{
+        alert(`Failed to create the RSO named ${RSOName}`)
+      }
     })
   }
 
   return (
     <div className='create-uni-form-container'>
-      <h2>Create RSO</h2>
+      <h2>Create RSO at {globalState.user.uni_name}</h2>
       <form className='create-rso' onSubmit={handleSubmit}>
-        <label htmlFor="rsoname">University Name</label>
+        <label htmlFor="rsoname">RSO Name</label>
         <input onChange={e=>setRSOName(e.target.value)} value={RSOName} type="text" placeholder="RSO" id="rsoname" name="rsoname"/>
         <button type="submit">Create RSO</button>
       </form>

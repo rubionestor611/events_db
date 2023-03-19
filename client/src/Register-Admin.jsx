@@ -35,7 +35,7 @@ export const RegisterAdmin = (props) => {
   }
 
   return (
-    <div className='auth-form-container'>
+    <div className='auth-form-container' style={{border:"none"}}>
       <h2>Super Admin Register</h2>
       <form className="register-admin-form" onSubmit={handleSubmit}>
         <label htmlFor="admin-guess">Admin Key</label>

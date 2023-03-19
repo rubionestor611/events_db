@@ -28,7 +28,7 @@ router.get('/:uni_id/', (req,res) =>{
 
     res.json({rsos, success:true});
   })
-})
+});
 
 // let user w/ id leave rso
 router.post('/leave', (req,res) => {
@@ -43,15 +43,6 @@ router.post('/leave', (req,res) => {
 
   });
 });
-
-//triggers
-// after insert on rsos, insert into rso_members (user_id,rso_id)
-// after insert on rso_members, if count(*) from rso_members where rso_id =new rso id
-//then update rsos r to set approved =1 where id = rso_id
-
-// to create is to ask if an RSO at the university matches the name
-  // if it does, simply join that RSO
-  // if not then create a new one and join that
 
 // create an rso
 router.post('/create', (req,res) => {
@@ -68,7 +59,6 @@ router.post('/create', (req,res) => {
 
       // if length of result is 0, we create it
       if(numResults == 0){
-        console.log('creating', name)
         //create the rso for the uni
         sql = 'INSERT INTO rsos (name, approved, admin_id, uni_id) VALUES ( ?, ?, ?, ?)';
         db.query(sql, [name, approved, user_id, uni_id], (err, result) => {
@@ -80,8 +70,7 @@ router.post('/create', (req,res) => {
               if (err) {   
                 return res.status(400).send(err);
               }
-              const new_rso_id = result[0];
-              console.log('new rso is of id', new_rso_id);
+              const new_rso_id = result[0].id;
               // have this user join the RSO
               sql = 'INSERT INTO rso_members (user_id, rso_id) VALUES (? , ?)'
               db.query(sql, [user_id, new_rso_id], (err,result)=>{
@@ -94,35 +83,51 @@ router.post('/create', (req,res) => {
         });
         return;
       }else{
-        console.log('Joining',result[0].id )
         // RSO exists
         // have this user join the RSO
         const rsoID =  result[0].id
-        sql = 'INSERT INTO rso_members (user_id, rso_id) VALUES (? , ?)'
+
+        // if user in it just return
+        sql = 'SELECT * FROM rso_members WHERE user_id = ? AND rso_id = ?';
         db.query(sql, [user_id, rsoID], (err,result)=>{
           if (err) {   
             return res.status(400).send(err);
           }
-          // get how many members this RSO has
-          sql = 'SELECT * FROM rso_members WHERE rso_id = ?'
-          db.query(sql, rsoID, (err,result)=>{
-            if(err) {
+          if (Object.keys(result).length > 0){
+            return res.status(401).json({msg: `Already a member of ${name}`})
+          }
+
+          // if user not in, just add them
+          sql = 'INSERT INTO rso_members (user_id, rso_id) VALUES (? , ?)'
+          db.query(sql, [user_id, rsoID], (err,result)=>{
+            if (err) {   
               return res.status(400).send(err);
             }
 
-            const numMembers = Object.keys(result).length;
-            if(numMembers >= 4){
-              sql = 'UPDATE rsos SET approved = 1 WHERE id = ?'
-              db.query(sql, result[0].rso_id, (err, result)=>{
-                if(err){
-                  return res.status(400).send(err);
-                }
-              })
-            }
-          })
-        });
+            // get how many members this RSO has
+            sql = 'SELECT * FROM rso_members WHERE rso_id = ?'
+            db.query(sql, rsoID, (err,result)=>{
+              if(err) {
+                return res.status(400).send(err);
+              }
 
-        return res.status(200).json({success:true});
+              const numMembers = Object.keys(result).length;
+              if(numMembers >= 4){
+                sql = 'UPDATE rsos SET approved = 1 WHERE id = ?'
+                db.query(sql, result[0].rso_id, (err, result)=>{
+                  if(err){
+                    return res.status(400).send(err);
+                  }
+                });
+
+                sql = 'UPDATE users SET auth_level = 2 WHERE id = (SELECT admin_id FROM rsos WHERE id = ?)'
+                console.log(result[0].rso_id)
+                db.query(sql, result[0].rso_id);
+              }
+            });
+
+          });
+        })
       }
     });
 });
@@ -131,15 +136,54 @@ router.post('/create', (req,res) => {
 // let user w/ id join rso
 router.post('/join', (req,res) => {
   const {user_id, rso_id} = req.body;
-  let sql = 'INSERT INTO rso_members (user_id, rso_id) VALUES ( ? , ?)';
-  db.query(sql, [user_id, rso_id], (err, result) => {
-      if (err)
-      {
-          return res.status(400).send(err);
-      }
 
-      res.json(result);
+  // if user in it just return
+  let sql = 'SELECT * FROM rso_members WHERE user_id = ? AND rso_id = ?';
+  db.query(sql, [user_id, rso_id], (err,result)=>{
+    if (err) {   
+      return res.status(400).send(err);
+    }
+    if (Object.keys(result).length > 0){
+      console.log(result)
+      return res.status(401).json({msg: `Already a member of this RSO`})
+    }
 
+    sql = 'INSERT INTO rso_members (user_id, rso_id) VALUES ( ? , ?)';
+    db.query(sql, [user_id, rso_id], (err, result) => {
+        if (err)
+        {
+            return res.status(400).send(err);
+        }
+
+        // get how many members this RSO has
+            sql = 'SELECT * FROM rso_members WHERE rso_id = ?'
+            db.query(sql, rso_id, (err,result)=>{
+              if(err) {
+                return res.status(400).send(err);
+              }
+
+              const numMembers = Object.keys(result).length;
+              if(numMembers >= 4){
+                sql = 'UPDATE rsos SET approved = 1 WHERE id = ?'
+                db.query(sql, result[0].rso_id, (err, result)=>{
+                  if(err){
+                    return res.status(400).send(err);
+                  }
+                });
+
+                sql = 'UPDATE users SET auth_level = 2 WHERE id = (SELECT admin_id FROM rsos WHERE id = ?)'
+                db.query(sql, result[0].rso_id, (err, result)=>{
+                  if(err){
+                    return res.status(400).send(err);
+                  }
+                  return res.status(200).json({success:true})
+                });
+              }
+            });
+
+    });
   });
+
+  
 });
 module.exports = router;

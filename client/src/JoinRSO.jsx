@@ -29,22 +29,33 @@ const JoinRSO = () => {
       return;
     }
 
-    // axios call - handle storing a member of that rso name. if 4 of them then approve the rso and make this one admin
-    console.log('should join rso', RSO);
+    axios.post('http://localhost:8800/rsos/join',
+    {
+      user_id: globalState.user.id,
+      rso_id: RSO
+    }).then((res)=>{
+      alert(`You've joined the rso!`)
+    }).catch(err => {
+      console.log(err)
+      alert(err.response.data.msg)
+    })
+    
   }
 
   return (
     <div>
-      <h2>Join an RSO!</h2>
+      <h2>Join an RSO at {globalState.user.uni_name}!</h2>
     <div className='auth-form-container'>
-      <select style={{marginBottom: '1rem', display: 'block'}} onChange={(e)=>{
-          setRSO(e.target.value);
-          }} name="selectedUni">
-          <option value={-1} >Select an RSO</option>
-          {
-            RSOs.map(rso => <option key={rso.id} value={rso.id}>{rso.name}</option>)
-          }
-      </select>
+      <div>
+        <select style={{marginBottom: '1rem'}} onChange={(e)=>{
+            setRSO(e.target.value);
+            }} name="selectedUni">
+            <option value={-1} >Select an RSO</option>
+            {
+              RSOs.map(rso => <option key={rso.id} value={rso.id}>{rso.name}</option>)
+            }
+        </select>
+      </div>
       <button type="submit" value={RSO} onClick={(e) => handleSubmit(e)}>Join RSO</button>
     </div>
     </div>

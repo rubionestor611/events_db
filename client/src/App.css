@@ -4,7 +4,9 @@
   min-height: 100vh;
   align-items: center;
   justify-content: center;
+  
   background-color: aquamarine;
+  background-image: linear-gradient(-255deg,lightgrey 0%,lightblue 29%, aquamarine 67%, #FFF800 100%)
 }
 
 .auth-from-container, .login-form, .register-form, .register-admin-form, .create-uni-form-container, .create-uni, .create-rso {

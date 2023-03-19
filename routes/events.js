@@ -293,7 +293,7 @@ router.get('/superadmin/:id/getUnapprovedEvents', (req, res) => {
         if (err) {
             return res.status(400).send(err);
         }
-        const events = [];
+        let events = [];
         for(let i = 0; i < Object.keys(result).length; i++){
           events.push(({
             "id": result[i].id, 
