@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import AuthentiationPage from './AuthenticationPage';
 import CreateRSO from './CreateRSO';
-import JoinRSO from './JoinRSO';
+import RSOs from './RSOs';
 import LandingPage from './LandingPage';
 import CreateEvent from './CreateEvent';
 import SuperAdminEvents from './SuperAdminEvents';
@@ -30,7 +30,7 @@ function App() {
           <Route path="/admin/manageevents" element={<ManageEvents/>} />
           {/* User Stuff */}
           <Route path="/landing" element={<LandingPage/>} />
-          <Route path="/joinrso" element={<JoinRSO/>} />
+          <Route path="/RSOs" element={<RSOs/>} />
           <Route path="/createrso" element={<CreateRSO/>} />
         </Routes>
       </div>

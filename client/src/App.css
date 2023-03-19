@@ -113,6 +113,7 @@ body{
 
 .manage-uni-list{
   list-style: none;
+  padding:0;
 }
 
 .manage-uni-card{

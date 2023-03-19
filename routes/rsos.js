@@ -11,6 +11,29 @@ const db = mySql.createConnection({
   database : "events"
 });
 
+//returns all rsos the user is in
+router.get('/:user_id/in', (req,res)=>{
+  const user_id = req.params.user_id;
+
+  let sql = 'SELECT * FROM rsos WHERE id = (SELECT rso_id FROM rso_members WHERE user_id = ?) AND approved = 1'
+  db.query(sql,user_id, (err,result)=>{
+    if(err){
+      return res.status(400).json(err);
+    }
+    const rsos = [];
+    for(let i = 0; i < Object.keys(result).length; i++){
+      rsos.push(({
+        "id": result[i].id,
+        "name": result[i].name,
+        "admin_id": result[i].admin_id,
+        "uni_id": result[i].uni_id
+      }));
+    }
+    
+    return res.json({rsos,success:true});
+  });
+})
+
 //provide uni_id in body
 router.get('/:uni_id/', (req,res) =>{
   const uni_id= req.params.uni_id;
@@ -33,14 +56,29 @@ router.get('/:uni_id/', (req,res) =>{
 // let user w/ id leave rso
 router.post('/leave', (req,res) => {
   const {user_id, rso_id} = req.body;
-  let sql = 'DELETE FROM rso_members (user_id, rso_id) WHERE user_id = ? AND rso_id = ?';
+  let sql = 'DELETE FROM rso_members WHERE user_id = ? AND rso_id = ?';
   db.query(sql, [user_id, rso_id], (err, result) => {
       if (err) {
           return res.status(400).send(err);
       }
 
-      res.json(result);
-
+      let sql = 'SELECT * FROM rsos WHERE id = (SELECT rso_id FROM rso_members WHERE user_id = ?) AND approved = 1'
+      db.query(sql,user_id, (err,result)=>{
+        if(err){
+          return res.status(400).json(err);
+        }
+        const rsos = [];
+        for(let i = 0; i < Object.keys(result).length; i++){
+          rsos.push(({
+            "id": result[i].id,
+            "name": result[i].name,
+            "admin_id": result[i].admin_id,
+            "uni_id": result[i].uni_id
+          }));
+        }
+        return res.json({rsos,success:true});
+      });
+    
   });
 });
 

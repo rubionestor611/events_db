@@ -18,7 +18,7 @@ export default function Navbar(){
         <ul>
           <CustomLink to="/landing">Home</CustomLink>
           <CustomLink to="/createrso">create rso</CustomLink>
-          <CustomLink to="/joinrso">join rso</CustomLink>
+          <CustomLink to="/RSOs">RSOs</CustomLink>
         </ul>
         <Link className="logout-btn" onClick={()=>updateGlobalState("user", null)} to="/">Sign Out</Link>
       </nav>
@@ -33,7 +33,7 @@ export default function Navbar(){
         <ul>
           <CustomLink to="/landing">Home</CustomLink>
           <CustomLink to="/createrso">Create RSO</CustomLink>
-          <CustomLink to="/joinrso">Join RSO</CustomLink>
+          <CustomLink to="/RSOs">RSOs</CustomLink>
           <CustomLink to="/admin/createevent">Create Event</CustomLink>     
           <CustomLink to="/admin/manageevents">Manage Events</CustomLink>  
         </ul>
@@ -50,7 +50,7 @@ export default function Navbar(){
         <ul>
             <CustomLink to="/landing">Home</CustomLink>
             {/*<CustomLink to="/createrso">create rso</CustomLink>
-            <CustomLink to="/joinrso">join rso</CustomLink>*/}
+            <CustomLink to="/joinrso">RSOs</CustomLink>*/}
             <CustomLink to="/superadmin/createuniversity">Create uni</CustomLink>
             <CustomLink to="/superadmin/manageuniversities">Manage Unis</CustomLink>
             <CustomLink to="/superadmin/events">Event Requests</CustomLink>
