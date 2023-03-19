@@ -19,7 +19,7 @@
     - [ ] three lists
     - [ ] title of event, university associated, rso (if applicable), description of event, date, location, email,phone, avg rating, more from description
     - [ ] making/editing/removing comments/ratings
-  - [ ] join rsos
-  - [ ] create rsos
-  - [ ] leave rsos
+  - [x] join rsos
+  - [x] create rsos
+  - [x] leave rsos
 
