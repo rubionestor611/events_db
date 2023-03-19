@@ -159,7 +159,7 @@ router.post('/create', (req,res) => {
                 });
 
                 sql = 'UPDATE users SET auth_level = 2 WHERE id = (SELECT admin_id FROM rsos WHERE id = ?)'
-                console.log(result[0].rso_id)
+                
                 db.query(sql, result[0].rso_id);
               }
             });
