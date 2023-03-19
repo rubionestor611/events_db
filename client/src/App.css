@@ -95,6 +95,18 @@ body{
   background-color: #777;
 }
 
+.logout-btn{
+  color: inherit;
+  text-decoration: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  background-color: red;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
 .manage-unis{
   flex: 1;
 }

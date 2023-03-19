@@ -20,7 +20,7 @@ export default function Navbar(){
           <CustomLink to="/createrso">create rso</CustomLink>
           <CustomLink to="/joinrso">join rso</CustomLink>
         </ul>
-        <Link onClick={()=>updateGlobalState("user", null)} to="/">Sign Out</Link>
+        <Link className="logout-btn" onClick={()=>updateGlobalState("user", null)} to="/">Sign Out</Link>
       </nav>
     )
     
@@ -32,11 +32,12 @@ export default function Navbar(){
         <Link to = "/landing" className="site-title">Events</Link>
         <ul>
           <CustomLink to="/landing">Home</CustomLink>
-          <CustomLink to="/createrso">create rso</CustomLink>
-          <CustomLink to="/joinrso">join rso</CustomLink>
-          <CustomLink to="/createevent">create event</CustomLink>      
+          <CustomLink to="/createrso">Create RSO</CustomLink>
+          <CustomLink to="/joinrso">Join RSO</CustomLink>
+          <CustomLink to="/admin/createevent">Create Event</CustomLink>     
+          <CustomLink to="/admin/manageevents">Manage Events</CustomLink>  
         </ul>
-        <Link onClick={()=>updateGlobalState("user", null)} to="/">Sign Out</Link>
+        <Link className="logout-btn" onClick={()=>updateGlobalState("user", null)} to="/">Sign Out</Link>
       </nav>
     )
     
@@ -54,7 +55,7 @@ export default function Navbar(){
             <CustomLink to="/superadmin/manageuniversities">Manage Unis</CustomLink>
             <CustomLink to="/superadmin/events">Event Requests</CustomLink>
         </ul>
-        <Link onClick={()=>updateGlobalState("user", null)} to="/">Sign Out</Link>
+        <Link className="logout-btn" onClick={()=>updateGlobalState("user", null)} to="/">Sign Out</Link>
       </nav>)
     
   }
