@@ -50,7 +50,7 @@ const CreateEvent = () => {
     const isApproved = false;
     
     // If not an RSO Event, approval not needed
-    if (rsoEvent === false)
+    if (rsoEvent == false)
     {
         isApproved = true;
     }
@@ -153,7 +153,7 @@ const CreateEvent = () => {
         {/* Don't need approved right? */}
         {/* It'd go here */}
         {/* Not sure how numRatings, scoreRatings, or rso_id works */}
-       
+      
         <button type="submit">Create Event</button>
 
       </form>
