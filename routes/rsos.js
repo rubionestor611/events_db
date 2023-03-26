@@ -11,6 +11,29 @@ const db = mySql.createConnection({
   database : "events"
 });
 
+//returns all rsos a user is admin of
+router.get('/:user_id/admin', (req,res) => {
+  const user_id = req.params.user_id;
+
+  let sql = 'SELECT * from rsos WHERE admin_id = ? AND approved = 1'
+  db.query(sql, user_id, (err, result) => {
+    if(err){
+      return res.status(400).json(err);
+    }
+    const rsos = [];
+    for(let i = 0; i < Object.keys(result).length; i++){
+      rsos.push(({
+        "id": result[i].id,
+        "name": result[i].name,
+        "admin_id": result[i].admin_id,
+        "uni_id": result[i].uni_id
+      }));
+    }
+    
+    return res.json({rsos,success:true});
+  })
+});
+
 //returns all rsos the user is in
 router.get('/:user_id/in', (req,res)=>{
   const user_id = req.params.user_id;

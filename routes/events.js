@@ -154,53 +154,18 @@ router.post('/rso', (req,res) => {
 });
 
 // creates event
-//from one of github repos
+// body has: name, category, description, time, date, location, phone, email, status, uni_id, rso_id, admin_id
 router.post('/create', (req,res) => {
+  const {name, category, description, time, date, location, phone, email, eventStatus, uni_id, rso_id, admin_id, approved} = req.body;
 
-    const {name, category, description, time, date, location_lat,location_long,location, phone, email, status, rating, approved, numRatings, scoreRatings, uni_id, rso_id, admin_id} = req.body;
-    if(location_lat != null && location_long != null){
-      const query = "INSERT INTO locations (name, longitude, latitude) VALUES (? , ?, ?)";
-      db.query(sql, [location, location_long,location_lat], (err, res)=>{
-        if (err) {
-            return res.status(400).send(err);
-        }
-
-        query = "SELECT id FROM locations WHERE name = ? AND latitude = ? AND longitude = ?";
-        db.query(query, [location, location_lat, location_long], (err,result)=>{
-          if (err){
-            return res.status(400).send(err);
-          }
-          
-          // should be just an id
-          let id = result[0];
-
-          let sql = 'INSERT INTO events (name, category, description, time, date, location_id, phone, email, status, event_uni_id, event_rso_id, event_admin_id, approved) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)';
-          db.query(sql, [name, category, description, time, date, id, phone, email, status, uni_id, rso_id, admin_id, approved], (err, result) => {
-              if (err)
-              {
-                  return res.status(400).send(err);
-              }
-            
-              return res.json(result);
-            
-          });
-        })
-
-        
-      })
-      return res.status(400).json({message: "End of create with location lat and long and nothing been returned"});
+  let sql = 'INSERT INTO events (name, category, description, time, date, location, phone, email, status, uni_id, rso_id, admin_id, approved) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  db.query(sql, [name, category, description, time, date, location, phone, email, eventStatus, uni_id, rso_id, admin_id, approved], (err,result)=>{
+    if(err){
+      return res.sendStatus(401);
     }
 
-    let sql = 'INSERT INTO events (name, category, description, time, date, location, phone, email, status, event_uni_id, event_rso_id, event_admin_id, approved) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)';
-    db.query(sql, [name, category, description, time, date, location_id,location, phone, email, status, rating, approved, numRatings, scoreRatings, uni_id, rso_id, admin_id], (err, result) => {
-        if (err)
-        {
-            return res.status(400).send(err);
-        }
-
-        res.json(result);
-
-    });
+    return res.json(result);
+  })
 });
 
 // from one of github repos
