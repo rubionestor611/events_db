@@ -111,7 +111,7 @@ body{
   flex: 1;
 }
 
-.manage-uni-list{
+.manage-uni-list, .sa-event-list{
   list-style: none;
   padding:0;
 }

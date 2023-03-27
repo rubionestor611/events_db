@@ -191,7 +191,7 @@ router.post('/superadmin/denyEvent', (req, res) => {
           return res.status(400).send(err);
       }
 
-      res.json(result);
+      return res.json(result);
 
   });
 });
@@ -207,8 +207,7 @@ router.post('/superadmin/approveEvent', (req, res) => {
           return res.status(400).send(err);
       }
 
-      res.json(result);
-
+      return res.json(result);
   });
 });
 
@@ -280,7 +279,7 @@ router.get('/superadmin/:id/getUnapprovedEvents', (req, res) => {
         }
 
         for(const uniID of uni_ids){
-          events = events.filter(event => event.uni_id == uniID);
+          events = events.filter(event => event.uni_id != uniID);
         }
 
         res.json({events, success:true});
