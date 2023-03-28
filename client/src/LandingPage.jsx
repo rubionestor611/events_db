@@ -1,37 +1,41 @@
 import './App.css';
-import { useGlobalState } from "./GlobalState.js";
-import { useState } from 'react';
+import {useGlobalState} from "./GlobalState.js";
+import {useState, useEffect} from 'react';
 import axios from 'axios';  
 
 
 const LandingPage = () => {
   const [globalState, updateGlobalState] = useGlobalState();
-  const [publicEvents, setPublicEvents] = useState([]);
+  const [publicEvents,setPublicEvents] = useState([]);
   const [privateEvents, setPrivateEvents] = useState([]);
   const [RSOEvents, setRSOEvents] = useState([]);
 
-  // useEffect(()=>{
-  //   getPrivateEvents();
-  //   getPublicEvents();
-  //   getRSOEvents();
-  // },[]);
+      useEffect(() => {
+    getPublicEvents();
+    getPrivateEvents();
+    getRSOEvents();
+  }, []);
 
   const getPublicEvents = async() => {
     axios.post(`http://localhost:8800/events/public`)
       .then((response)=>{
         setPublicEvents(response.data);
+        console.log(response.data);
       })
       .catch(err=>{
-        console.log(err);
+        console.log("error:");
+        console.log(err);       
       })
     }
 
   const getPrivateEvents = async() => {
     axios.post(`http://localhost:8800/events/private`)
       .then((response)=>{
-        setPublicEvents(response.data);
+        setPrivateEvents(response.data);
+        console.log("SUCCESS!")
       })
       .catch(err=>{
+        console.log("error:");
         console.log(err);
       })
   }
@@ -39,9 +43,10 @@ const LandingPage = () => {
   const getRSOEvents = async(RSO) => {
     axios.post(`http://localhost:8800/events/rso`)
       .then((response)=>{
-        setPublicEvents(response.data);
+        setRSOEvents(response.data);
       })
       .catch(err=>{
+        console.log("error:");
         console.log(err);
       })
   }
@@ -62,7 +67,7 @@ const LandingPage = () => {
                   <h2>{item.name}</h2>
                   <p>{item.description}</p>
                   <p>{item.location}</p>
-                  <button type="button" value={item.id} className='manage-uni-delete' onClick={(e) => deleteUni(e.target.value)}>Delete</button>
+                  <button type="button" value={item.id} className='manage-uni-delete' onClick={(e) => openEvent(e.target.value)}>Event Info</button>
                 </div>}
                 </li>
                 ) : <li><h1>No Private Events to see ... try making some!</h1></li>
@@ -77,7 +82,7 @@ const LandingPage = () => {
                   <h2>{item.name}</h2>
                   <p>{item.description}</p>
                   <p>{item.location}</p>
-                  <button type="button" value={item.id} className='manage-uni-delete' onClick={(e) => deleteUni(e.target.value)}>Delete</button>
+                  <button type="button" value={item.id} className='manage-uni-delete' onClick={(e) => openEvent(e.target.value)}>Event Info</button>
                 </div>}
                 </li>
                 ) : <li><h1>No Public to see ... try making some!</h1></li>
@@ -92,7 +97,7 @@ const LandingPage = () => {
                   <h2>{item.name}</h2>
                   <p>{item.description}</p>
                   <p>{item.location}</p>
-                  <button type="button" value={item.id} className='manage-uni-delete' onClick={(e) => deleteUni(e.target.value)}>Delete</button>
+                  <button type="button" value={item.id} className='manage-uni-delete' onClick={(e) => openEvent(e.target.value)}>Event Info</button>
                 </div>}
                 </li>
                 ) : <li><h1>No RSO Events to see ... try making some!</h1></li>
