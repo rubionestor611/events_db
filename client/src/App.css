@@ -116,6 +116,17 @@ body{
   padding:0;
 }
 
+.manage-public-events-list, .manage-private-events-list, .manage-rso-events-list{
+  list-style: none;
+  padding:0;
+}
+
+.events-header{
+  display: block;
+  top: "10%"
+}
+
+
 .manage-uni-card{
   background-color: white;
   border-radius: 5rem;
