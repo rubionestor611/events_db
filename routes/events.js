@@ -73,9 +73,17 @@ router.get('/visible/:id', (req,res)=>{
       });
 
       // select all public events and uni_ids, pass in users uni_id
-      const sql = 'SELECT events.id,  rsos.name, rsos.id, events.name AS eventName, events.approved, events.uni_id, events.status, category, description, time, events.date, location, phone, email, rating, numRatings, scoreRatings, rso_members.user_id FROM events INNER JOIN rso_members ON events.rso_id = rso_members.rso_id AND rso_members.user_id = ? INNER JOIN rsos ON events.rso_id = rsos.id AND events.uni_id = ? AND events.approved = 1 GROUP BY id UNION SELECT id,  rsos.name, rsos.id, events.name AS eventName, events.approved, events.uni_id, events.status, category, description, time, events.date, location, phone, email, rating, numRatings, scoreRatings, rso_members.user_id FROM events, rso_members, rsos WHERE events.rso_id = rsos.id AND (events.uni_id = ? AND events.approved = 1 AND events.status = "public") GROUP BY id';//"SELECT * FROM events WHERE status='Public' UNION SELECT * FROM events WHERE uni_id = ? SELECT * FROM events INNER JOIN rsos ON ";
+      //let sql = 'SELECT events.id,  rsos.name, rsos.id, events.name AS eventName, events.approved, events.uni_id, events.status, category, description, time, events.date, location, phone, email, rating, numRatings, scoreRatings, rso_members.user_id FROM events INNER JOIN rso_members ON events.rso_id = rso_members.rso_id AND rso_members.user_id = ? INNER JOIN rsos ON events.rso_id = rsos.id AND events.uni_id = ? AND events.approved = 1 GROUP BY id UNION SELECT id,  rsos.name, rsos.id, events.name AS eventName, events.approved, events.uni_id, events.status, category, description, time, events.date, location, phone, email, rating, numRatings, scoreRatings, rso_members.user_id FROM events, rso_members, rsos WHERE events.rso_id = rsos.id AND (events.uni_id = ? AND events.approved = 1 AND events.status = "public") GROUP BY id';//"SELECT * FROM events WHERE status='Public' UNION SELECT * FROM events WHERE uni_id = ? SELECT * FROM events INNER JOIN rsos ON ";
       
-      db.query(sql, [user.id, user.uni_id, user.uni_id], (err,result)=>{
+
+      let sql = 'SELECT e.id AS event_id, e.name AS event_name, e.category, e.description, e.time, e.date, e.location, e.phone, e.email, e.status, e.rating, e.approved AS event_approved, e.numRatings, e.scoreRatings, e.uni_id, e.rso_id AS event_rso_id, e.admin_id AS event_admin_id,' +
+      'r.id AS rso_id, r.name AS rso_name, r.approved AS rso_approved, r.admin_id AS rso_admin_id, r.uni_id AS rso_uni_id' + 
+      'FROM events e' +
+      'INNER JOIN rsos r ON e.rso_id = r.id' +
+      'INNER JOIN rso_members rm ON rm.user_id = ?' +
+      'WHERE e.rso_id IS NOT NULL AND e.approved = 1 AND e.uni_id = ?';
+
+      db.query(sql, [user.id, user.uni_id], (err,result)=>{
         if (err) {
           return res.send(400).send(err);
         }
