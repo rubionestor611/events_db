@@ -9,18 +9,46 @@ const LandingPage = () => {
   const [publicEvents,setPublicEvents] = useState([]);
   const [privateEvents, setPrivateEvents] = useState([]);
   const [RSOEvents, setRSOEvents] = useState([]);
+  const [allComments, setAllComments] = useState([]);
+  const [allRatings, setAllRatings] = useState([]);
 
-      useEffect(() => {
+  useEffect(() => {
     getPublicEvents();
     getPrivateEvents();
     getRSOEvents();
+    getAllComments();
+    getAllRatings();
   }, []);
+
+  const getAllComments = async () => {
+    axios.get(`http://localhost:8800/comments/all`)
+      .then((response)=>{
+        setAllComments(response.data);
+        console.log("comments", response.data);
+      })
+      .catch(err=>{
+        console.log("error:");
+        console.log(err);       
+      })
+  }
+
+  const getAllRatings = async () => {
+    axios.get(`http://localhost:8800/ratings/all`)
+      .then((response)=>{
+        setAllRatings(response.data);
+        console.log("ratings", response.data);
+      })
+      .catch(err=>{
+        console.log("error:");
+        console.log(err);       
+      })
+  }
 
   const getPublicEvents = async() => {
     axios.post(`http://localhost:8800/events/public`)
       .then((response)=>{
         setPublicEvents(response.data);
-        console.log(response.data);
+        console.log("public", response.data);
       })
       .catch(err=>{
         console.log("error:");
@@ -32,7 +60,7 @@ const LandingPage = () => {
     axios.post(`http://localhost:8800/events/private`)
       .then((response)=>{
         setPrivateEvents(response.data);
-        console.log("SUCCESS!")
+        console.log("private", response.data)
       })
       .catch(err=>{
         console.log("error:");
@@ -43,6 +71,7 @@ const LandingPage = () => {
   const getRSOEvents = async(RSO) => {
     axios.post(`http://localhost:8800/events/rso`)
       .then((response)=>{
+        console.log('rso', response.data)
         setRSOEvents(response.data);
       })
       .catch(err=>{

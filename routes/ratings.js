@@ -10,6 +10,19 @@ const db = mySql.createConnection({
   password : "",
   database : "events"
 });
+
+router.get("/all", (req,res)=>{
+  let sql = "SELECT * FROM ratings;"
+  db.query(sql,(err,result)=>{
+    if (err)
+    {
+      return res.status(400).send(err);
+    }
+
+    return res.json(result);
+  })
+});
+
 // adds ratings to DB
 router.post('/create', (req,res) => {
 
