@@ -133,7 +133,7 @@ router.post('/private', (req,res) => {
     
     const {university_id} = req.body;
 
-    let sql = 'SELECT * FROM events WHERE status = "private" AND approved = 1';
+    let sql = 'SELECT * FROM events WHERE status = "private" AND approved = 1 AND uni_id = ?';
     db.query(sql, university_id, (err, result) => {
         if (err)
         {
@@ -149,10 +149,9 @@ router.post('/private', (req,res) => {
 // from one of github repos
 router.post('/rso', (req,res) => {
     const { idUser, university_id } = req.body;
-
-    //let sql = 'SELECT event_id,  rsos.rso_name, rsos.rso_id, events.event_name AS eventName, events.approved, event_uni_id, events.status, category, description, time, events.event_date, location, phone, email, rating, numRatings, scoreRatings, rso_member_user_id FROM events INNER JOIN rso_members ON events.event_rso_id = rso_members.rso_member_rso_id AND rso_member_user_id = ? INNER JOIN rsos ON events.event_rso_id = rsos.rso_id AND event_uni_id = ? AND events.approved = 1 GROUP BY event_id UNION SELECT event_id,  rsos.rso_name, rsos.rso_id, events.event_name AS eventName, events.approved, event_uni_id, events.status, category, description, time, events.event_date, location, phone, email, rating, numRatings, scoreRatings, rso_member_user_id FROM events, rso_members, rsos WHERE events.event_rso_id = rsos.rso_id AND (events.event_uni_id = ? AND events.approved = 1 AND events.status = "public") GROUP BY event_id';
-    let sql = 'SELECT * FROM events WHERE status = "rso" AND approved = 1';
-    db.query(sql, [idUser, university_id, university_id], (err, result) => {
+    
+    let sql = "SELECT * FROM events WHERE status = 'rso' AND approved = 1 AND EXISTS (SELECT 1 FROM rso_members WHERE rso_members.rso_id = events.rso_id AND rso_members.user_id = ?)"
+    db.query(sql, [idUser], (err, result) => {
         if (err)
         {
             return res.status(400).send(err);

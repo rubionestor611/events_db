@@ -57,7 +57,10 @@ const LandingPage = () => {
     }
 
   const getPrivateEvents = async() => {
-    axios.post(`http://localhost:8800/events/private`)
+    axios.post(`http://localhost:8800/events/private`, 
+    {
+      university_id: globalState.user.uni_id
+    })
       .then((response)=>{
         setPrivateEvents(response.data);
         console.log("private", response.data)
@@ -69,7 +72,10 @@ const LandingPage = () => {
   }
 
   const getRSOEvents = async(RSO) => {
-    axios.post(`http://localhost:8800/events/rso`)
+    axios.post(`http://localhost:8800/events/rso`,
+    {
+      idUser: globalState.user.id
+    })
       .then((response)=>{
         console.log('rso', response.data)
         setRSOEvents(response.data);
