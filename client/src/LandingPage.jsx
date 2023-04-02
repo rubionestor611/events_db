@@ -9,6 +9,7 @@ const LandingPage = () => {
   const [publicEvents,setPublicEvents] = useState([]);
   const [privateEvents, setPrivateEvents] = useState([]);
   const [RSOEvents, setRSOEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [allComments, setAllComments] = useState([]);
   const [allRatings, setAllRatings] = useState([]);
 
@@ -19,6 +20,30 @@ const LandingPage = () => {
     getAllComments();
     getAllRatings();
   }, []);
+
+  const EventInfo = ({ event , onClose}) => {
+    return (
+      <div className='event-info-modal'>
+        <div className='event-info-content'>
+          <button className='event-info-close' onClick={onClose}>X</button>
+            <h1>Event Name: {event?.name}</h1>
+            <p>Category: {event?.category}</p>
+            <p>Description: {event?.description}</p>
+            <p>Time: {event?.time}</p>
+            <p>Date: {event?.date}</p>
+            <p>Location ID: {event?.location_id}</p>
+            <p>Location: {event?.location}</p>
+            <p>Phone: {event?.phone}</p>
+            <p>Email: {event?.email}</p>
+            <p>Status: {event?.status}</p>
+            <p>Uni ID: {event?.uni_id}</p>
+            <p>RSO ID: {event?.rso_id}</p>
+            <p>Admin ID: {event?.admin_id}</p>
+            </div>
+      </div>
+    );
+  };
+  
 
   const getAllComments = async () => {
     axios.get(`http://localhost:8800/comments/all`)
@@ -86,6 +111,16 @@ const LandingPage = () => {
       })
   }
 
+  function openEvent(eventID){
+    const allEvents = [...privateEvents, ...publicEvents, ...RSOEvents];
+    const event = allEvents.find((e) => e.id === parseInt(eventID, 10));
+    setSelectedEvent(event);
+  }
+
+  function closeEvent() {
+    setSelectedEvent(null);
+  }
+
   return(
     <div>
     
@@ -98,11 +133,12 @@ const LandingPage = () => {
             {
               privateEvents.length > 0 ? privateEvents.map(item=>
                 <li key={item.id} value={item.id}>
-                  {<div className='manage-uni-card'>
+                  {<div className='manage-event-card'>
                   <h2>{item.name}</h2>
                   <p>{item.description}</p>
                   <p>{item.location}</p>
-                  <button type="button" value={item.id} className='manage-uni-delete' onClick={(e) => openEvent(e.target.value)}>Event Info</button>
+                  <button type="button" value={item.id} className='manage-event-open'
+                  onClick={(e) => openEvent(e.target.value)}>Event Info</button>
                 </div>}
                 </li>
                 ) : <li><h1>No Private Events to see ... try making some!</h1></li>
@@ -113,11 +149,12 @@ const LandingPage = () => {
             {
               publicEvents.length > 0 ? publicEvents.map(item=>
                 <li key={item.id} value={item.id}>
-                  {<div className='manage-uni-card'>
+                  {<div className='manage-event-card'>
                   <h2>{item.name}</h2>
                   <p>{item.description}</p>
                   <p>{item.location}</p>
-                  <button type="button" value={item.id} className='manage-uni-delete' onClick={(e) => openEvent(e.target.value)}>Event Info</button>
+                  <button type="button" value={item.id} className='manage-event-open' 
+                  onClick={(e) => openEvent(e.target.value)}>Event Info</button>
                 </div>}
                 </li>
                 ) : <li><h1>No Public to see ... try making some!</h1></li>
@@ -128,18 +165,21 @@ const LandingPage = () => {
             {
               RSOEvents.length > 0 ? RSOEvents.map(item=>
                 <li key={item.id} value={item.id}>
-                  {<div className='manage-uni-card'>
+                  {<div className='manage-event-card'>
                   <h2>{item.name}</h2>
                   <p>{item.description}</p>
                   <p>{item.location}</p>
-                  <button type="button" value={item.id} className='manage-uni-delete' onClick={(e) => openEvent(e.target.value)}>Event Info</button>
+                  <button type="button" value={item.id} className='manage-event-open' 
+                  onClick={(e) => openEvent(e.target.value)}>Event Info</button>
                 </div>}
                 </li>
                 ) : <li><h1>No RSO Events to see ... try making some!</h1></li>
             }
         </ul>
       </div>
-
+      {
+        selectedEvent && <EventInfo event={selectedEvent} onClose={closeEvent}/>
+      }
     </div>
 
   )
