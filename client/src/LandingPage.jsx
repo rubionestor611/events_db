@@ -12,6 +12,8 @@ const LandingPage = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [allComments, setAllComments] = useState([]);
   const [allRatings, setAllRatings] = useState([]);
+  const [userComment, setUserComment] = useState('');
+  const [userRating, setUserRating] = useState(0);
 
   useEffect(() => {
     getPublicEvents();
@@ -21,7 +23,11 @@ const LandingPage = () => {
     getAllRatings();
   }, []);
 
-  const EventInfo = ({ event , onClose, comments}) => {
+  const EventInfo = ({ event , onClose, comments, ratings}) => {
+    
+    const eventComments = comments.filter((comment) => comment.event_id === event.id);
+    const eventRatings = ratings.filter((rating) => rating.event_id === event.id);
+
     return (
       <div className='event-info-modal'>
         <div className='event-info-content'>
@@ -40,13 +46,66 @@ const LandingPage = () => {
           <p>RSO ID: {event?.rso_id}</p>
           <p>Admin ID: {event?.admin_id}</p>
           <div>
-            <p>{comments}</p>
+            <h3>Comments:</h3>
+            {
+              eventComments.map((comment) => 
+              (<p key={comment.id}>{comment.comment}</p>))
+            }          
           </div>
+          <div>
+            <h3>Ratings:</h3>
+            {
+              eventRatings.map((rating) => 
+              (<p key={rating.id}>{rating.rating} Stars</p>))
+            }
+        </div>
+        <div>
+          <h3>Add Comment and Rating:</h3>
+          <div>
+            <textarea value={userComment} onChange={(e) => setUserComment(e.target.value)}></textarea>
+          </div>
+          
+          <div>
+            <select value={userRating} onChange={(e) => setUserRating(parseInt(e.target.value, 10))}>
+              {[1, 2, 3, 4, 5].map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <button onClick={() => handleSubmitCommentAndRating(event.id)}>Submit</button>
         </div>
       </div>
     );
   };
   
+  const handleSubmitCommentAndRating = async (eventID) => {
+    await axios.post(`http://localhost:8800/comments/create`),
+      {event_id: eventID,
+      user_id: globalState.user.id,
+      message: userComment}
+      .then(console.log("User " + globalState.user.id, " says " + message))
+      .catch(err=>{
+        console.log("error " + err);
+      })
+
+    await axios.post(`http://localhost:8800/ratings/create`),
+    {
+      event_id: eventID,
+      user_id: globalState.user.id,
+      rating: userRating
+    }
+
+    // Clear form inputs
+    setUserComment('');
+    setUserRating(0);
+
+    // Refresh comments and ratings
+    getAllComments();
+    getAllRatings();
+  }
 
   const getAllComments = async () => {
     axios.get(`http://localhost:8800/comments/all`)
@@ -187,7 +246,8 @@ const LandingPage = () => {
       </div>
     </div>
       {
-        selectedEvent && <EventInfo event={selectedEvent} onClose={closeEvent}/>
+        selectedEvent && 
+        <EventInfo event={selectedEvent} onClose={closeEvent} comments={allComments} ratings={allRatings}/>
       }
     </div>
 
