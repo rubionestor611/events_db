@@ -12,7 +12,7 @@ const db = mySql.createConnection({
 });
 
 router.get("/all", (req,res)=>{
-  let sql = "SELECT * FROM comments;"
+  let sql = "SELECT c.*, u.username FROM comments c JOIN users u ON c.user_id = u.id";
   db.query(sql,(err,result)=>{
     if (err)
     {
