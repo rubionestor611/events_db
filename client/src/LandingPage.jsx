@@ -27,7 +27,15 @@ const LandingPage = () => {
     
     const eventComments = comments.filter((comment) => comment.event_id === event.id);
     const eventRatings = ratings.filter((rating) => rating.event_id === event.id);
+    const [averageEventRating, setAverageEventRating] = useState(0);
+    const [numEventRatings, setNumEventRatings] = useState(0);
 
+    function addRating(rating)
+    {
+      numEventRatings += 1;
+      averageEventRating = (averageEventRating + rating ) / numEventRatings;
+
+    }
     return (
       <div className='event-info-modal'>
         <div className='event-info-content'>
@@ -46,25 +54,9 @@ const LandingPage = () => {
           <p>RSO ID: {event?.rso_id}</p>
           <p>Admin ID: {event?.admin_id}</p>
           <div>
-            <h3>Comments:</h3>
-            {
-              eventComments.map((comment) => 
-              (<p key={comment.id}>{comment.comment}</p>))
-            }          
-          </div>
-          <div>
-            <h3>Ratings:</h3>
-            {
-              eventRatings.map((rating) => 
-              (<p key={rating.id}>{rating.rating} Stars</p>))
-            }
-        </div>
-        <div>
-          <h3>Add Comment and Rating:</h3>
-          <div>
-            <textarea value={userComment} onChange={(e) => setUserComment(e.target.value)}></textarea>
-          </div>
-          
+          <h3>Event Rating: {averageEventRating}</h3>
+
+          <h3>Add Rating:</h3>
           <div>
             <select value={userRating} onChange={(e) => setUserRating(parseInt(e.target.value, 10))}>
               {[1, 2, 3, 4, 5].map((value) => (
@@ -74,36 +66,61 @@ const LandingPage = () => {
               ))}
             </select>
           </div>
+          <div>
+          <button onClick={() => handleSubmitRating(event.id)}>Submit Rating</button>
+
+          </div>
+          <h3>Add Comment:             
+          <div>
+              <textarea value={userComment} onChange={(e) => setUserComment(e.target.value)}></textarea>
+          </div></h3>
+            <button onClick={() => handleSubmitComment(event.id)}>Submit Comment</button>
+          </div>
+          </div>
+        <div>
+            <h3>Comments:</h3>
+            {
+              eventComments.map((comment) => 
+              (<p key={comment.id}>{comment.comment}</p>))
+            }          
+          </div>
+          <div>
+            
         </div>
-        <button onClick={() => handleSubmitCommentAndRating(event.id)}>Submit</button>
         </div>
-      </div>
     );
   };
-  
-  const handleSubmitCommentAndRating = async (eventID) => {
+
+  const handleSubmitComment = async (eventID) => {
     await axios.post(`http://localhost:8800/comments/create`),
-      {event_id: eventID,
-      user_id: globalState.user.id,
-      message: userComment}
-      .then(console.log("User " + globalState.user.id, " says " + message))
-      .catch(err=>{
-        console.log("error " + err);
-      })
+    {event_id: eventID,
+    user_id: globalState.user.id,
+    message: userComment}
+    .then(console.log("User " + globalState.user.id, " says " + userComment))
+    .catch(err=>{
+      console.log("error " + err);
+    })
+    // Clear form inputs
+    setUserComment('');
+    // Refresh comments and ratings
+    getAllComments();
+  }
+  
+  const handleSubmitRating = async (eventID) => {
 
     await axios.post(`http://localhost:8800/ratings/create`),
     {
       event_id: eventID,
       user_id: globalState.user.id,
       rating: userRating
-    }
-
+    }.then(console.log("User " + globalState.user.id, " rated " + userRating))
+    .catch(err => {
+      console.log("error: " + err);
+    })
     // Clear form inputs
-    setUserComment('');
     setUserRating(0);
 
     // Refresh comments and ratings
-    getAllComments();
     getAllRatings();
   }
 
