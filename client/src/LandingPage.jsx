@@ -28,14 +28,33 @@ const LandingPage = () => {
     const eventComments = comments.filter((comment) => comment.event_id === event.id);
     const eventRatings = ratings.filter((rating) => rating.event_id === event.id);
     const [averageEventRating, setAverageEventRating] = useState(0);
-    const [numEventRatings, setNumEventRatings] = useState(0);
 
-    function addRating(rating)
-    {
-      numEventRatings += 1;
-      averageEventRating = (averageEventRating + rating ) / numEventRatings;
-
+    useEffect(() => {
+      const totalRatings = eventRatings.reduce((total, rating) => total + rating.rating, 0);
+      const average = eventRatings.length > 0 ? totalRatings / eventRatings.length : 0;
+      setAverageEventRating(average);
+    }, [eventRatings]);
+    
+    function getEventComments(eventID){
+      return allComments.filter((comment) => comment.eventID === eventID);
     }
+
+    function getEventRatings(eventID) {
+      return allRatings.filter((rating) => rating.event_id === eventID);
+    }
+  
+    // function getAverageRating(eventID) {
+    //   const eventRatings = getEventRatings(eventID);
+    //   const totalRatings = eventRatings.reduce((total, rating) => total + rating.rating, 0);
+    //   return eventRatings.length > 0 ? totalRatings / eventRatings.length : 0;
+    // }
+  
+    // function addRating(rating)
+    // {
+    //   numEventRatings += 1;
+    //   averageEventRating = (averageEventRating + rating ) / numEventRatings;
+    // }
+
     return (
       <div className='event-info-modal'>
         <div className='event-info-content'>
@@ -230,17 +249,19 @@ const LandingPage = () => {
           <ul className='manage-public-events-list'>
             {
               publicEvents.length > 0 ? publicEvents.map(item=>
+                    
                 <li key={item.id} value={item.id}>
                   {<div className='manage-event-card'>
                   <h2>Event: {item.name}</h2>
                   <p>{item.description}</p>
                   <p>{item.location}</p>
-                  <p>Comments: {allComments}</p>
+                  <p>Comments: {eventComments}</p>
                   <button type="button" value={item.id} className='manage-event-open' 
                   onClick={(e) => openEvent(e.target.value)}>Event Info</button>
                 </div>}
                 </li>
-                ) : <li><h1>No Public to see ... try making some!</h1></li>
+                )
+                : <li><h1>No Public to see ... try making some!</h1></li>
             }
         </ul>
         </div>
