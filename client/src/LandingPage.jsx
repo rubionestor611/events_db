@@ -111,6 +111,7 @@ const LandingPage = () => {
   };
 
   const handleSubmitComment = async (eventID) => {
+    
     await axios.post(`http://localhost:8800/comments/create`),
     {event_id: eventID,
     user_id: globalState.user.id,
@@ -126,7 +127,7 @@ const LandingPage = () => {
   }
   
   const handleSubmitRating = async (eventID) => {
-
+    console.log(eventID, globalState.user.id, userRating)
     await axios.post(`http://localhost:8800/ratings/create`),
     {
       event_id: eventID,
@@ -225,7 +226,7 @@ const LandingPage = () => {
     <div>
     
       <div style={{position: 'absolute',top: "5%", left: "50%"}}>
-        <p style={{fontWeight: 'bold'}}>Welcome {globalState.user.username}!</p>
+        {<p style={{fontWeight: 'bold'}}>Welcome {globalState.user.username}!</p>}
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gridGap: 20 }}>
         <div><h1 style={{position: 'absolute', top: "10%", left: '5%'}}>Private Events</h1>
@@ -255,7 +256,7 @@ const LandingPage = () => {
                   <h2>Event: {item.name}</h2>
                   <p>{item.description}</p>
                   <p>{item.location}</p>
-                  <p>Comments: {eventComments}</p>
+                  {/*<p>Comments: {eventComments}</p>*/}
                   <button type="button" value={item.id} className='manage-event-open' 
                   onClick={(e) => openEvent(e.target.value)}>Event Info</button>
                 </div>}

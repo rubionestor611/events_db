@@ -36,15 +36,14 @@ router.post('/create', (req,res) => {
         }
     });
 
-    sql = 'SELECT * FROM ratings WHERE \event_id = ? AND user_id = ? AND rating = ?';
+    sql = 'SELECT * FROM ratings WHERE event_id = ? AND user_id = ? AND rating = ?';
     db.query(sql, [event_id, user_id, rating], (err, result) => {
         if (err)
         {
             return res.status(400).send(err);
+        }else{
+          return res.json(result);
         }
-
-        res.json(result);
-
     });
 });
 
