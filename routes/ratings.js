@@ -27,11 +27,12 @@ router.get("/all", (req,res)=>{
 router.post('/create', (req,res) => {
 
     const {event_id, user_id, rating} = req.body;
-
+  console.log(event_id, user_id, rating)
     let sql = 'INSERT INTO ratings (event_id, user_id, rating) VALUES ( ?, ?, ?)';
     db.query(sql, [event_id, user_id, rating], (err, result) => {
         if (err)
         {
+          console.log('no submission', err);
             return res.status(400).send(err);
         }
     });

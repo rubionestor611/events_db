@@ -64,14 +64,14 @@ const LandingPage = () => {
           <p>Description: {event?.description}</p>
           <p>Time: {event?.time}</p>
           <p>Date: {event?.date}</p>
-          <p>Location ID: {event?.location_id}</p>
+          {/*<p>Location ID: {event?.location_id}</p>*/}
           <p>Location: {event?.location}</p>
           <p>Phone: {event?.phone}</p>
           <p>Email: {event?.email}</p>
           <p>Status: {event?.status}</p>
-          <p>Uni ID: {event?.uni_id}</p>
-          <p>RSO ID: {event?.rso_id}</p>
-          <p>Admin ID: {event?.admin_id}</p>
+          {/*<p>Uni ID: {event?.uni_id}</p>*/}
+          {/*<p>RSO ID: {event?.rso_id}</p>*/}
+          {/*<p>Admin ID: {event?.admin_id}</p>*/}
           <div>
           <h3>Event Rating: {averageEventRating}</h3>
 
@@ -127,13 +127,12 @@ const LandingPage = () => {
   }
   
   const handleSubmitRating = async (eventID) => {
-    console.log(eventID, globalState.user.id, userRating)
-    await axios.post(`http://localhost:8800/ratings/create`),
+    await axios.post(`http://localhost:8800/ratings/create`,
     {
       event_id: eventID,
       user_id: globalState.user.id,
       rating: userRating
-    }.then(console.log("User " + globalState.user.id, " rated " + userRating))
+    }).then(console.log("User " + globalState.user.id, " rated " + userRating))
     .catch(err => {
       console.log("error: " + err);
     })
