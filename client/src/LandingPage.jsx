@@ -73,7 +73,7 @@ const LandingPage = () => {
           {/*<p>RSO ID: {event?.rso_id}</p>*/}
           {/*<p>Admin ID: {event?.admin_id}</p>*/}
           <div>
-          <h3>Event Rating: {averageEventRating}</h3>
+          <h3>Event Rating: {averageEventRating === 0 ? "No Ratings Yet" : averageEventRating}</h3>
 
           <h3>Add Rating:</h3>
           <div>
