@@ -23,27 +23,6 @@ const LandingPage = () => {
     getAllRatings();
   }, []);
 
-  const CommentInput = ({ onSubmit }) => {
-    const [userComment, setUserComment] = useState('');
-  
-    const handleSubmit = () => {
-      onSubmit(userComment);
-      setUserComment('');
-    };
-  
-    return (
-      <div>
-        <div>
-          <textarea value={userComment} onChange={(e) => setUserComment(e.target.value)}></textarea>
-        </div>
-          <div>
-          <button onClick={handleSubmit}>Submit Comment</button>
-        </div>
-      </div>
-    );
-  };
-  
-
   const EventInfo = ({ event , onClose, comments, ratings}) => {
     
     const eventComments = comments.filter((comment) => comment.event_id === event.id);
@@ -54,7 +33,7 @@ const LandingPage = () => {
       const totalRatings = eventRatings.reduce((total, rating) => total + rating.rating, 0);
       const average = eventRatings.length > 0 ? totalRatings / eventRatings.length : 0;
       setAverageEventRating(average);
-    }, [ratings]);
+    }, [eventRatings]);
     
     function getEventComments(eventID){
       return allComments.filter((comment) => comment.eventID === eventID);
@@ -111,10 +90,10 @@ const LandingPage = () => {
 
           </div>
           <h3>Add Comment:             
-            <div>
-              <CommentInput onSubmit={(comment) => handleSubmitComment(event.id, comment)} />
-            </div>
-          </h3>
+          <div>
+              <textarea value={userComment} onChange={(e) => setUserComment(e.target.value)}></textarea>
+          </div></h3>
+            <button onClick={() => handleSubmitComment(event.id)}>Submit Comment</button>
           </div>
           </div>
         <div>
@@ -131,16 +110,18 @@ const LandingPage = () => {
     );
   };
 
-  const handleSubmitComment = async (eventID, comment) => {
+  const handleSubmitComment = async (eventID) => {
     
     await axios.post(`http://localhost:8800/comments/create`),
     {event_id: eventID,
     user_id: globalState.user.id,
-    message: comment}
+    message: userComment}
     .then(console.log("User " + globalState.user.id, " says " + userComment))
     .catch(err=>{
       console.log("error " + err);
     })
+    // Clear form inputs
+    setUserComment('');
     // Refresh comments and ratings
     getAllComments();
   }
@@ -159,7 +140,7 @@ const LandingPage = () => {
     setUserRating(0);
 
     // Refresh comments and ratings
-    getAllRatings(eventID);
+    getAllRatings();
   }
 
   const getAllComments = async () => {
@@ -174,7 +155,7 @@ const LandingPage = () => {
       })
   }
 
-  const getAllRatings = async (updatedEventId) => {
+  const getAllRatings = async () => {
     axios.get(`http://localhost:8800/ratings/all`)
       .then((response)=>{
         setAllRatings(response.data);
