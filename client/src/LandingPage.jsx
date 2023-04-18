@@ -12,7 +12,6 @@ const LandingPage = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [allComments, setAllComments] = useState([]);
   const [allRatings, setAllRatings] = useState([]);
-  const [localComments, setLocalComments] = useState([]);
 
   useEffect(() => {
     getPublicEvents();
@@ -36,13 +35,7 @@ const LandingPage = () => {
       setAverageEventRating(average);
     }, [eventRatings, allRatings]);
     
-    function getEventComments(eventID){
-      return allComments.filter((comment) => comment.eventID === eventID);
-    }
 
-    function getEventRatings(eventID) {
-      return allRatings.filter((rating) => rating.event_id === eventID);
-    }
 
     const handleSubmitRating = async (eventID) => {
       try {
@@ -58,24 +51,22 @@ const LandingPage = () => {
         console.log("error: " + err);
       }
     };
-
-    function handleSubmitCommentLocally(eventID){
-      setLocalComments((prevComments) => [
-        ...prevComments,
-        {
+    const handleSubmitComment = async (eventID, userComment) => {
+      try {
+        await axios.post(`http://localhost:8800/comments/create`, {
           event_id: eventID,
           user_id: globalState.user.id,
           message: userComment
-        },
-      ]);
-      handleSubmitComment(eventID, userComment);
-      setUserComment("");
-    }
-
-    const localEventComments = localComments.filter(
-      (comment) => comment.event_id === event.id
-    );
-
+        });
+        console.log("User " + globalState.user.id, " says " + userComment);
+    
+        setUserComment('');
+        getAllComments();
+      } catch (err) {
+        console.log("error " + err);
+      }
+    };
+  
     return (
       <div className='event-info-modal'>
         <div className='event-info-content'>
@@ -94,7 +85,7 @@ const LandingPage = () => {
           {/*<p>RSO ID: {event?.rso_id}</p>*/}
           {/*<p>Admin ID: {event?.admin_id}</p>*/}
           <div>
-          <h3>Event Rating: {averageEventRating === 0 ? "No Ratings Yet" : averageEventRating}</h3>
+          <strong>Event Rating: {averageEventRating === 0 ? "No Ratings Yet" : averageEventRating}</strong>
 
           <h3>Add Rating:</h3>
           <div>
@@ -107,24 +98,23 @@ const LandingPage = () => {
             </select>
           </div>
           <div>
-          <button onClick={() => handleSubmitRating(event.id)}>Submit Rating</button>
+          <button onClick={() => handleSubmitRating(event.id)}><strong>Submit Rating</strong></button>
 
           </div>
           <h3>Add Comment:             
           <div>
               <textarea value={userComment} onChange={(e) => setUserComment(e.target.value)}></textarea>
           </div></h3>
-            {/* <button onClick={() => handleSubmitComment(event.id)}>Submit Comment</button> */}
             <button onClick={() => {
-              handleSubmitCommentLocally(event.id)
+              handleSubmitComment(event.id, userComment)
             }
-              }>Submit Comment</button>
+              }><strong>Submit Comment</strong></button>
           </div>
           <div>
             <h3>Comments:</h3>
             {
-              localEventComments.map((comment, index) => 
-              (<p key={index}>{" says: " +comment.message}</p>))
+              eventComments.map((comment, index) => 
+              (<p key={index}>{comment.username + ": " + comment.message}</p>))
             }          
           </div>
           </div>
@@ -135,22 +125,7 @@ const LandingPage = () => {
     );
   };
 
-  const handleSubmitComment = async (eventID, userComment) => {
-    try {
-      await axios.post(`http://localhost:8800/comments/create`, {
-        event_id: eventID,
-        user_id: globalState.user.id,
-        message: userComment
-      });
-      console.log("User " + globalState.user.id, " says " + userComment);
-      setUserComment('');
-      getAllComments();
-    } catch (err) {
-      console.log("error " + err);
-    }
-  };
-  
-
+ 
 
 
   // const handleSubmitRating = async (eventID) => {
