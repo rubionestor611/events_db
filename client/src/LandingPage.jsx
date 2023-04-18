@@ -12,8 +12,7 @@ const LandingPage = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [allComments, setAllComments] = useState([]);
   const [allRatings, setAllRatings] = useState([]);
-  const [userComment, setUserComment] = useState('');
-  const [userRating, setUserRating] = useState(0);
+  const [localComments, setLocalComments] = useState([]);
 
   useEffect(() => {
     getPublicEvents();
@@ -25,6 +24,8 @@ const LandingPage = () => {
 
   const EventInfo = ({ event , onClose, comments, ratings}) => {
     
+    const [userComment, setUserComment] = useState('');
+    const [userRating, setUserRating] = useState(0);
     const eventComments = comments.filter((comment) => comment.event_id === event.id);
     const eventRatings = ratings.filter((rating) => rating.event_id === event.id);
     const [averageEventRating, setAverageEventRating] = useState(0);
@@ -33,7 +34,7 @@ const LandingPage = () => {
       const totalRatings = eventRatings.reduce((total, rating) => total + rating.rating, 0);
       const average = eventRatings.length > 0 ? totalRatings / eventRatings.length : 0;
       setAverageEventRating(average);
-    }, [eventRatings]);
+    }, [eventRatings, allRatings]);
     
     function getEventComments(eventID){
       return allComments.filter((comment) => comment.eventID === eventID);
@@ -42,18 +43,38 @@ const LandingPage = () => {
     function getEventRatings(eventID) {
       return allRatings.filter((rating) => rating.event_id === eventID);
     }
-  
-    // function getAverageRating(eventID) {
-    //   const eventRatings = getEventRatings(eventID);
-    //   const totalRatings = eventRatings.reduce((total, rating) => total + rating.rating, 0);
-    //   return eventRatings.length > 0 ? totalRatings / eventRatings.length : 0;
-    // }
-  
-    // function addRating(rating)
-    // {
-    //   numEventRatings += 1;
-    //   averageEventRating = (averageEventRating + rating ) / numEventRatings;
-    // }
+
+    const handleSubmitRating = async (eventID) => {
+      try {
+        await axios.post(`http://localhost:8800/ratings/create`, {
+          event_id: eventID,
+          user_id: globalState.user.id,
+          rating: userRating
+        });
+        console.log("User " + globalState.user.id, " rated " + userRating);
+        setUserRating(0);
+        getAllRatings();
+      } catch (err) {
+        console.log("error: " + err);
+      }
+    };
+
+    function handleSubmitCommentLocally(eventID){
+      setLocalComments((prevComments) => [
+        ...prevComments,
+        {
+          event_id: eventID,
+          user_id: globalState.user.id,
+          message: userComment
+        },
+      ]);
+      handleSubmitComment(eventID, userComment);
+      setUserComment("");
+    }
+
+    const localEventComments = localComments.filter(
+      (comment) => comment.event_id === event.id
+    );
 
     return (
       <div className='event-info-modal'>
@@ -93,15 +114,19 @@ const LandingPage = () => {
           <div>
               <textarea value={userComment} onChange={(e) => setUserComment(e.target.value)}></textarea>
           </div></h3>
-            <button onClick={() => handleSubmitComment(event.id)}>Submit Comment</button>
+            {/* <button onClick={() => handleSubmitComment(event.id)}>Submit Comment</button> */}
+            <button onClick={() => {
+              handleSubmitCommentLocally(event.id)
+            }
+              }>Submit Comment</button>
           </div>
-          </div>
-        <div>
+          <div>
             <h3>Comments:</h3>
             {
-              eventComments.map((comment) => 
-              (<p key={comment.id}>{comment.comment}</p>))
+              localEventComments.map((comment, index) => 
+              (<p key={index}>{" says: " +comment.message}</p>))
             }          
+          </div>
           </div>
           <div>
             
@@ -110,38 +135,40 @@ const LandingPage = () => {
     );
   };
 
-  const handleSubmitComment = async (eventID) => {
-    
-    await axios.post(`http://localhost:8800/comments/create`),
-    {event_id: eventID,
-    user_id: globalState.user.id,
-    message: userComment}
-    .then(console.log("User " + globalState.user.id, " says " + userComment))
-    .catch(err=>{
+  const handleSubmitComment = async (eventID, userComment) => {
+    try {
+      await axios.post(`http://localhost:8800/comments/create`, {
+        event_id: eventID,
+        user_id: globalState.user.id,
+        message: userComment
+      });
+      console.log("User " + globalState.user.id, " says " + userComment);
+      setUserComment('');
+      getAllComments();
+    } catch (err) {
       console.log("error " + err);
-    })
-    // Clear form inputs
-    setUserComment('');
-    // Refresh comments and ratings
-    getAllComments();
-  }
+    }
+  };
   
-  const handleSubmitRating = async (eventID) => {
-    await axios.post(`http://localhost:8800/ratings/create`,
-    {
-      event_id: eventID,
-      user_id: globalState.user.id,
-      rating: userRating
-    }).then(console.log("User " + globalState.user.id, " rated " + userRating))
-    .catch(err => {
-      console.log("error: " + err);
-    })
-    // Clear form inputs
-    setUserRating(0);
 
-    // Refresh comments and ratings
-    getAllRatings();
-  }
+
+
+  // const handleSubmitRating = async (eventID) => {
+  //   await axios.post(`http://localhost:8800/ratings/create`,
+  //   {
+  //     event_id: eventID,
+  //     user_id: globalState.user.id,
+  //     rating: userRating
+  //   }).then(console.log("User " + globalState.user.id, " rated " + userRating))
+  //   .catch(err => {
+  //     console.log("error: " + err);
+  //   })
+  //   // Clear form inputs
+  //   setUserRating(0);
+
+  //   // Refresh comments and ratings
+  //   getAllRatings();
+  // }
 
   const getAllComments = async () => {
     axios.get(`http://localhost:8800/comments/all`)
